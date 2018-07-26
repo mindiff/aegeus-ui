@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.aegeus</groupId>
+        <artifactId>aegeus</artifactId>
+        <version>1.0.0.Alpha4-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>aegeus-wallet</artifactId>
+
+    <name>Aegeus :: Wallet</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.nessus</groupId>
+            <artifactId>nessus-bitcoin</artifactId>
+        </dependency>
+        
+        <!-- Provided -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Test -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+</project>

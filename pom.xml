@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.aegeus</groupId>
+    <artifactId>aegeus</artifactId>
+    <version> 1.0.0.Alpha4-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Aaegeus</name>
+
+    <scm>
+        <connection>scm:git:https://github.com/AegeusCoin/aegeus-ui</connection>
+        <developerConnection>scm:git:git@github.com:AegeusCoin/aegeus-ui</developerConnection>
+        <url>https://github.com/AegeusCoin/aegeus-ui</url>
+        <tag>HEAD</tag>
+    </scm>
+    
+    <properties>
+        <version.args4j>2.0.31</version.args4j>
+        <version.apache.velocity>1.7</version.apache.velocity>
+        <version.io.nessus>1.0.0.Alpha2</version.io.nessus>
+        <version.io.undertow>2.0.9.Final</version.io.undertow>
+        <version.jboss.resteasy>3.6.0.Final</version.jboss.resteasy>
+        <version.junit>4.11</version.junit>
+        <version.slf4j>1.6.6</version.slf4j>
+                
+        <!-- Plugin versions -->
+        <version-codehaus-license-plugin>1.16</version-codehaus-license-plugin>
+        <version-maven-assembly-plugin>3.1.0</version-maven-assembly-plugin>
+        <version-maven-compiler-plugin>3.1</version-maven-compiler-plugin>
+        <version-maven-jar-plugin>2.6</version-maven-jar-plugin>
+        <version-maven-release-plugin>2.5</version-maven-release-plugin>
+        <version-maven-surefire-plugin>2.22.0</version-maven-surefire-plugin>
+        <version-markdown-plugin>2.1.0</version-markdown-plugin>
+    </properties>
+    
+    <modules>
+        <module>jaxrs</module>
+        <module>wallet</module>
+        <module>webui</module>
+        <module>docs</module>
+        <module>dist</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>args4j</groupId>
+                <artifactId>args4j</artifactId>
+                <version>${version.args4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.nessus</groupId>
+                <artifactId>nessus-bitcoin</artifactId>
+                <version>${version.io.nessus}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.nessus</groupId>
+                <artifactId>nessus-ipfs</artifactId>
+                <version>${version.io.nessus}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.nessus</groupId>
+                <artifactId>nessus-cipher</artifactId>
+                <version>${version.io.nessus}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-core</artifactId>
+                <version>${version.io.undertow}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>${version.apache.velocity}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>${version.jboss.resteasy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jackson-provider</artifactId>
+                <version>${version.jboss.resteasy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxrs</artifactId>
+                <version>${version.jboss.resteasy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-undertow</artifactId>
+                <version>${version.jboss.resteasy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <!-- Plugin Management -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.ruleoftech</groupId>
+                    <artifactId>markdown-page-generator-plugin</artifactId>
+                    <version>${version-markdown-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${version-maven-assembly-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version-maven-compiler-plugin}</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${version-maven-jar-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${version-maven-release-plugin}</version>
+                    <configuration>
+                        <goals>install</goals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version-maven-surefire-plugin}</version>
+                    <configuration>
+                        <failIfNoTests>false</failIfNoTests>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${version-codehaus-license-plugin}</version>
+                    <configuration>
+                        <organizationName>Aegeus</organizationName>
+                        <inceptionYear>2018</inceptionYear>
+                        <licenseName>mit</licenseName>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>    
+    
+
+    <repositories>
+        <repository>
+            <id>jboss-thirdparty-repository</id>
+            <name>JBoss Thirdparty Releases</name>
+            <url>https://repository.jboss.org/nexus/service/local/repositories/thirdparty-releases/content/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
+</project>

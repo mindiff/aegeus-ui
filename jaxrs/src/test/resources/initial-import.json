@@ -1,0 +1,18 @@
+{
+	"wallet": {
+		"addresses": [
+            {
+                "privKey": "PRPS5pHX4J5kw5C51foxcydSQZAA8VnFPxYsgNi2AG6wKVsM4BsJ",
+                "labels": [ "Bob" ]
+            },
+            {
+                "privKey": "PRyMQhrufMrjotxEUZnXXTyx15jeqoz6e1qh9iyTnJtHuhLMqUv5",
+                "labels": [ "Marry" ]
+            },
+            {
+                "pubKey": "AJ379Fcun7fh5Cq9LEjrogChD5PVmV4Gxn",
+                "labels": [ "Dummy" ]
+            }
+		]
+	}
+}

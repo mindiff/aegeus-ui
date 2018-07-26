@@ -1,0 +1,48 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="/css/demo.css">
+</head>
+
+<body>
+<table>
+<tr>
+<td><img alt="logo" width="111" height="54" data-sticky-width="82" data-sticky-height="40" data-sticky-top="33" src="/img/logo.png"></td>
+<td valign="bottom"><a href="/portal">Home</a></td>
+<tr>
+</table>
+
+<h1>Send File</h1>
+
+<table>
+<tr class="gray">
+    <td>$addr.label</td>
+    <td><a href="/portal/plist?addr=$addr.address">$addr.address</a></td>
+    <td>$addr.balance</td>
+</tr>
+</table>
+
+<p>
+
+<table>
+<form action="/portal/sendcid">
+<input type="hidden" name="fromaddr" value="$addr.address">
+<input type="hidden" name="cid" value="$file.cid">
+<tr>
+<th>File</th><td><a href="$gatewayUrl/$file.cid" target="_blank">$file.cid</a></td>
+</tr>
+<tr>
+<th>Address</th><td><select name="toaddr">
+#foreach( $toaddr in $toaddrs )
+  <option value="$toaddr.address">$toaddr.label - $toaddr.address</option>
+#end
+</select></td>
+</tr>
+<tr>
+<td>&nbsp;</td><td><input type="submit"></td>
+</tr>
+</form>
+</table>
+
+</body>
+</html>
