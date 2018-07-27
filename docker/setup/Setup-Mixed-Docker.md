@@ -4,21 +4,20 @@ This type of installation requires a working [Docker](https://www.docker.com/com
 
 To verify that your Docker env is setup properly, you can list the running container like this ...
 
-    docker ps
-
+    $ docker ps
     CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 
 In total there are four Docker images to make up the complete system.
 
-1. [nessusio/ipfs](https://hub.docker.com/r/nessusio/ipfs)
-2. [nessusio/aegeus](https://hub.docker.com/r/nessusio/aegeus)
-3. [nessusio/aegeus-jaxrs](https://hub.docker.com/r/nessusio/aegeus-jaxrs)
-4. [nessusio/aegeus-webui](https://hub.docker.com/r/nessusio/aegeus-webui)
+1. [aegeus/aegeusd](https://hub.docker.com/r/aegeus/aegeusd)
+2. [aegeus/aegeus-ipfs](https://hub.docker.com/r/aegeus/aegeus-ipfs)
+3. [aegeus/aegeus-jaxrs](https://hub.docker.com/r/aegeus/aegeus-jaxrs)
+4. [aegeus/aegeus-webui](https://hub.docker.com/r/aegeus/aegeus-webui)
 
 What follows is an installation guide for the last two containers. 
 It is assumed that you already have a local IPFS and AEG wallet running. 
 
-#### nessusio/aegeus-jaxrs
+### Running the AEG JAXRS image
 
 This is the JSON-RPC bridge, which contains the Aegeus application logic that connects the Aegeus network with IPFS network. 
 
@@ -55,19 +54,20 @@ To start the Aegeus bridge in Docker, you can run ...
         --env AEG_PORT_51473_TCP_PORT=51473 \
         --env AEG_ENV_RPCUSER=aeg \
         --env AEG_ENV_RPCPASS=aegpass \
-        --name jaxrs \
-        nessusio/aegeus-jaxrs
+        --memory=200m --memory-swap=2g \
+        --name aeg-jaxrs \
+        aegeus/aegeus-jaxrs
 
 On bootstrap the bridge reports some connection properties.
 
-    docker logs jaxrs
+    docker logs aeg-jaxrs
     
     AegeusBlockchain: http://aeg:*******@192.168.178.20:51473
     AegeusNetwork Version: 2000000
     IPFS Version: 0.4.16
     Aegeus JAXRS: http://0.0.0.0:8081/aegeus
 
-#### nessusio/aegeus-webui
+### Running the AEG WebUI image
 
 In this setup the Aegeus UI is optional as well. Still, lets try to connect it to the JSON-RPC bridge and the Aegeus wallet  ...
 
@@ -81,20 +81,21 @@ In this setup the Aegeus UI is optional as well. Still, lets try to connect it t
         --env AEG_ENV_RPCUSER=aeg \
         --env AEG_ENV_RPCPASS=aegpass \
         --env AEG_WEBUI_LABEL=Bob \
-        --name webui \
-        nessusio/aegeus-webui
+        --memory=200m --memory-swap=2g \
+        --name aeg-webui \
+        aegeus/aegeus-webui
 
 Now that everything is running, it should look like this
 
     docker ps
     
-    CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                    NAMES
-    417b2518b499        nessusio/aegeus-webui   "aegeus-webui/bin/ru…"   9 seconds ago       Up 8 seconds        0.0.0.0:8082->8082/tcp   webui
-    e1a0bbf693fa        nessusio/aegeus-jaxrs   "aegeus-jaxrs start"     3 minutes ago       Up 3 minutes        0.0.0.0:8081->8081/tcp   jaxrs
+    CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                    NAMES
+    417b2518b499        aegeus/aegeus-webui   "aegeus-webui"           9 seconds ago       Up 8 seconds        0.0.0.0:8082->8082/tcp   aeg-webui
+    e1a0bbf693fa        aegeus/aegeus-jaxrs   "aegeus-jaxrs start"     3 minutes ago       Up 3 minutes        0.0.0.0:8081->8081/tcp   aeg-jaxrs
 
 The WebUI also reports some connection properties.
 
-    docker logs webui
+    docker logs aeg-webui
     
     AEG JAXRS: http://172.17.0.2:8081/aegeus
     IPFS Gateway: http://192.168.178.20:8080/ipfs
@@ -104,4 +105,4 @@ The WebUI also reports some connection properties.
 
 You should now be able to access the WebUI at: [http://127.0.0.1:8082/portal](http://127.0.0.1:8082/portal)
 
-Everything else should work as described [here](Setup-Local-All-Docker.md).
+Everything else should work as described [here](Setup-All-Docker.md).

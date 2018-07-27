@@ -3,92 +3,67 @@
 
 The AEG demo requires a working [Docker](https://www.docker.com/community-edition) environment. 
 
-### Run the IPFS image
+### Quickstart 
 
-In the steps below, you would have to replace `167.99.32.85` with the external IP of Marry's host.
+In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ... 
 
-```
-export NAME=ipfs-02
+    docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
+    docker run --detach --name aeg-ipfs -p 4001:4001 -p 8080:8080 --expose 5001 --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
+    docker run --detach --name aeg-jaxrs -p 8081:8081 --link aegd:aeg --link aeg-ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs
+    docker run --detach --name aeg-webui -p 8082:8082 --link aegd:aeg --link aeg-ipfs:ipfs --link aeg-jaxrs:jaxrs --memory=200m --memory-swap=2g --env AEG_WEBUI_LABEL=Marry aegeus/aegeus-webui
 
-docker rm -f $NAME
-docker run --detach \
-    -p 4001:4001 \
-    -p $MNEXTIP:8080:8080 \
-    --expose 5001 \
-    --memory=200m --memory-swap=2g \
-    --name $NAME \
-    nessusio/ipfs
+### Running the AEG daemon image
 
-sleep 6
+    docker run --detach \
+        -p 29328:29328 \
+        --memory=200m --memory-swap=2g \
+        --name aegd \
+        aegeus/aegeusd
 
-export EXTERNALIP=167.99.32.85
-echo "docker exec ipfs-01 ipfs swarm connect /ip4/$EXTERNALIP/tcp/4001/ipfs/`docker exec $NAME ipfs config Identity.PeerID`"
-```
+It'll take a little while for the network to sync. You can watch progress like this ...
 
-### Run the AEG image
+    watch docker exec aegd aegeus-cli getinfo
 
-```
-export MNNAME=aeg-02
-export MNPORT=29328
+### Running the AEG IPFS image
 
-docker rm -f $MNNAME
-docker run --detach \
-    -p $MNPORT:$MNPORT \
-    --memory=200m --memory-swap=2g \
-    --name $MNNAME \
-    nessusio/aegeus
+In the steps below, you would have to replace `167.99.32.85` with the external IP of your host.
 
-watch docker exec $MNNAME aegeus-cli getinfo
-```
+    docker run --detach \
+        -p 4001:4001 \
+        -p 8080:8080 \
+        --expose 5001 \
+        --memory=200m --memory-swap=2g \
+        --name aeg-ipfs \
+        aegeus/aegeus-ipfs
 
-### Run the AEG JAXRS image
+    sleep 6
 
-```
-export NAME=jaxrs-02
-export MNNAME=aeg-02
-export IPFSNAME=ipfs-02
-export JAXRSPORT=8081
+    export EXTERNALIP=167.99.32.85
+    echo "docker exec aeg-ipfs ipfs swarm connect /ip4/$EXTERNALIP/tcp/4001/ipfs/`docker exec $NAME ipfs config Identity.PeerID`"
 
-docker rm -f $NAME
-docker run --detach \
-    -p $JAXRSPORT:$JAXRSPORT \
-    --link $MNNAME:aeg \
-    --link $IPFSNAME:ipfs \
-    --memory=200m --memory-swap=2g \
-    --name $NAME \
-    nessusio/aegeus-jaxrs
+### Running the AEG JAXRS image
+
+    docker run --detach \
+        -p 8081:8081 \
+        --link aegd:aeg \
+        --link aeg-ipfs:ipfs \
+        --memory=200m --memory-swap=2g \
+        --name aeg-jaxrs \
+        aegeus/aegeus-jaxrs
     
-watch docker logs jaxrs-02
+    watch docker logs aeg-jaxrs
 
-docker exec $NAME aegeus-jaxrs --help
-docker exec -it $NAME tail -f -n 100 debug.log
+### Running the AEG WebUI image
 
-docker exec $NAME ipfs --api=/ip4/172.17.0.2/tcp/5001 config show
-```
-
-### Run the AEG WebUI image
-
-```
-export LABEL=Marry
-export NAME=webui-02
-export MNNAME=aeg-02
-export IPFSNAME=ipfs-02
-export JAXRSNAME=jaxrs-02
-export WEBPORT=5002
-
-docker rm -f $NAME
-docker run --detach \
-    -p $WEBPORT:$WEBPORT \
-    --link $MNNAME:aeg \
-    --link $IPFSNAME:ipfs \
-    --link $JAXRSNAME:jaxrs \
-    --env AEG_WEBUI_LABEL=$LABEL \
-    --env AEG_WEBUI_PORT=$WEBPORT \
-    --memory=200m --memory-swap=2g \
-    --name $NAME \
-    nessusio/aegeus-webui
+    docker run --detach \
+        -p 8082:8082 \
+        --link aegd:aeg \
+        --link aeg-ipfs:ipfs \
+        --link aeg-jaxrs:jaxrs \
+        --env AEG_WEBUI_LABEL=Bob \
+        --memory=200m --memory-swap=2g \
+        --name aeg-webui \
+        aegeus/aegeus-webui
     
-watch docker logs $NAME
+    watch docker logs aeg-webui
   
-docker exec -it $NAME tail -f -n 100 debug.log
-```
