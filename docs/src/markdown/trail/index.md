@@ -153,6 +153,4 @@ Marr can now click __show__ on the decrypted file to view the content.
 
 Thanks for watching this demo, perhaps you liked it. 
 
-I did this project as a POC for some other work I'm currently doing. The task was to demonstrate meaningful integration of Blockchain with IPFS technology. The choice of Aegeus as the underlying platform is technically arbitrary and only here for your benefit. I like what you are doing and I thought you might find it interesting to see what already can be done with Aegeus. With a little more work on the UI, you may even want to release something based on this as an early preview of the future Aegeus platform. This could boost community and invetor confidence in the project.
-
 If you like to install this on your side, have a look at this [setup guide](Setup-Guide-Bob.md) 

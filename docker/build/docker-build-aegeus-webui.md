@@ -23,6 +23,7 @@ EOF
 
 docker rmi -f aegeus/aegeus-webui
 docker build -t aegeus/aegeus-webui docker/
+
 docker push aegeus/aegeus-webui
 
 docker tag aegeus/aegeus-webui aegeus/aegeus-webui:$NVERSION

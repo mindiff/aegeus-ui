@@ -22,6 +22,7 @@ docker build -t aegeus/golang docker/
 docker run --rm aegeus/golang
 
 docker push aegeus/golang
+
 docker tag aegeus/golang aegeus/golang:1.10.3
 docker push aegeus/golang:1.10.3
 ```
@@ -74,6 +75,7 @@ EOF
 
 docker rmi -f aegeus/aegeus-ipfs
 docker build -t aegeus/aegeus-ipfs docker/
+
 docker push aegeus/aegeus-ipfs
 
 docker tag aegeus/aegeus-ipfs aegeus/aegeus-ipfs:$IPFS_VERSION

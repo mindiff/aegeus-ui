@@ -24,6 +24,7 @@ EOF
 
 docker rmi -f aegeus/aegeus-jaxrs
 docker build -t aegeus/aegeus-jaxrs docker/
+
 docker push aegeus/aegeus-jaxrs
 
 docker tag aegeus/aegeus-jaxrs aegeus/aegeus-jaxrs:$NVERSION
