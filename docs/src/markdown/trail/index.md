@@ -17,7 +17,7 @@ Without further ado, lets dive right into what we have here ...
 
 Our first actor is Bob. He has heard about what [Aegeus](https://aegeus.io) is doing with IPFS and would like to give Marry, who we will meet later, an encrypted copy of his medical records. For ensurance reasons, he needs proof that Marry has been given access to these records by a certain date. Needless to say, he does not want anybody else, but Marry, to be able to access these records.
 
-Bob visits Aegeus here: [http://167.99.32.83:5002/portal](http://167.99.32.83:5002/portal)
+Bob visits Aegeus here: [http://167.99.32.83:8082/portal](http://167.99.32.83:8082/portal)
 
 ![bob-home-01](img/bob-home-01.png)
 
@@ -110,7 +110,7 @@ The Aegeus app can then __show__ us the decrypted content.
 
 Marry also has access to Aegeus. Like Bob, she has already registered her public key. 
 
-Marry visits Aegeus here: [http://167.99.32.85:5002/portal](http://167.99.32.85:5002/portal)
+Marry visits Aegeus here: [http://167.99.32.85:8082/portal](http://167.99.32.85:8082/portal)
 
 ![marry-home-01](img/marry-home-01.png)
 
@@ -152,7 +152,5 @@ Marr can now click __show__ on the decrypted file to view the content.
 ### Finally
 
 Thanks for watching this demo, perhaps you liked it. 
-
-I did this project as a POC for some other work I'm currently doing. The task was to demonstrate meaningful integration of Blockchain with IPFS technology. The choice of Aegeus as the underlying platform is technically arbitrary and only here for your benefit. I like what you are doing and I thought you might find it interesting to see what already can be done with Aegeus. With a little more work on the UI, you may even want to release something based on this as an early preview of the future Aegeus platform. This could boost community and invetor confidence in the project.
 
 If you like to install this on your side, have a look at this [setup guide](Setup-Guide-Bob.md) 
