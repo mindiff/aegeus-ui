@@ -61,7 +61,7 @@ public class AegeusWallet extends AbstractWallet {
 
     @Override
     protected boolean isP2PKH(String addr) {
-        return addr.startsWith("A");
+        return addr.startsWith("A") || addr.startsWith("P");
     }
 
     
