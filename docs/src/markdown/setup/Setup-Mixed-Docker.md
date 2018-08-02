@@ -21,7 +21,9 @@ It is assumed that you already have a local IPFS and AEG wallet running.
 
 This is the JSON-RPC bridge, which contains the Aegeus application logic that connects the Aegeus network with IPFS network. 
 
-For this to work, your Aegeus client needs to bind to an external IP
+#### Bind the Aegeus wallet to an external IP
+
+For this to work, your Aegeus wallet needs to bind to an external IP
 
     server=1
     txindex=1
@@ -29,6 +31,7 @@ For this to work, your Aegeus client needs to bind to an external IP
     rpcpassword=aegpass
     rpcbind=192.168.178.20
     rpcallowip=192.168.178.20
+    rpcconnect=192.168.178.20
     rpcport=51473
     wallet=test-wallet.dat                                                                                                                                                                                                  
  
@@ -39,9 +42,35 @@ Verify that this works
     
 Then, verify that this also works from within docker
 
-    docker run -it --entrypoint=bash fedora:28
+    docker run -it --entrypoint=bash aegeus/aegeus-ipfs
+    
+    export LOCALIP=192.168.178.20
     curl --data-binary '{"method": "getinfo"}' http://aeg:aegpass@192.168.178.20:51473
     
+#### Bind the IPFS daemon to an external IP
+
+For this to work, your IPFS daemon needs to bind to an external IP
+
+    ipfs config Addresses.API "/ip4/0.0.0.0/tcp/5001"
+    ipfs daemon &
+    ...    
+    API server listening on /ip4/0.0.0.0/tcp/5001
+    Daemon is ready
+ 
+Verify that this works
+
+    export LOCALIP=192.168.178.20
+    ipfs --api=/ip4/$LOCALIP/tcp/5001 version
+    
+Then, verify that this also works from within docker
+
+    docker run -it --entrypoint=bash aegeus/aegeus-ipfs
+    
+    export LOCALIP=192.168.178.20
+    ipfs --api=/ip4/$LOCALIP/tcp/5001 version
+    
+#### Run the AEG JAXRS image
+
 To start the Aegeus bridge in Docker, you can run ...
     
     docker run --detach \
@@ -73,7 +102,7 @@ In this setup the Aegeus UI is optional as well. Still, lets try to connect it t
 
     docker run --detach \
         -p 8082:8082 \
-        --link jaxrs:jaxrs \
+        --link aeg-jaxrs:jaxrs \
         --env IPFS_PORT_8080_TCP_ADDR=$LOCALIP \
         --env IPFS_PORT_8080_TCP_PORT=8080 \
         --env AEG_PORT_51473_TCP_ADDR=$LOCALIP \

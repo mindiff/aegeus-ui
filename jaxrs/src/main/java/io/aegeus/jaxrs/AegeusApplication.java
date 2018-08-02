@@ -26,10 +26,11 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.nessus.RpcClientSupport;
 import io.aegeus.AegeusBlockchain;
 import io.nessus.Blockchain;
 import io.nessus.BlockchainFactory;
+import io.nessus.RpcClientSupport;
+import io.nessus.ipfs.ContentManager;
 import io.nessus.ipfs.IPFSClient;
 import io.nessus.ipfs.impl.CmdLineIPFSClient;
 import io.nessus.utils.AssertState;
@@ -51,7 +52,10 @@ public class AegeusApplication extends Application {
         config = new AegeusConfig(host, port);
     }
     
+    private static AegeusApplication INSTANCE;
     private static AegeusServer aegeusServer;
+    
+    private final ContentManager contentManager;
     
     public static void main(String[] args) throws Exception {
         
@@ -64,6 +68,94 @@ public class AegeusApplication extends Application {
         }
     }
 
+    public static AegeusServer serverStart() {
+        
+        Blockchain blockchain = BlockchainFactory.getBlockchain(rpcUrl(), AegeusBlockchain.class);
+        String networkName = blockchain.getNetwork().getClass().getSimpleName();
+        BitcoindRpcClient rpcclient = ((RpcClientSupport) blockchain).getRpcClient();
+        LOG.info("{} Version: {}",  networkName, rpcclient.getNetworkInfo().version());
+        
+        IPFSClient ipfs = new CmdLineIPFSClient();
+        LOG.info("IPFS Version: {}",  ipfs.version().split(" ")[2]);
+        
+        Builder builder = Undertow.builder().addHttpListener(config.port, config.host);
+        UndertowJaxrsServer jaxrsServer = new UndertowJaxrsServer().start(builder);
+        jaxrsServer.deploy(AegeusApplication.class);
+        
+        aegeusServer = new AegeusServer(jaxrsServer, config);
+        LOG.info("Aegeus JAXRS: {}",  aegeusServer.getRootURL());
+        
+        return aegeusServer;
+    }
+    
+    public static void serverStop() {
+
+        if (aegeusServer != null) {
+            aegeusServer.stop();
+            aegeusServer = null;
+        }
+    }
+    
+    static AegeusApplication getInstance() {
+        return INSTANCE;
+    }
+    
+    public AegeusApplication() {
+        ResteasyProviderFactory providerFactory = ResteasyProviderFactory.getInstance();
+        providerFactory.registerProvider(GeneralSecurityExceptionMapper.class);
+        providerFactory.registerProvider(RuntimeExceptionMapper.class);
+        providerFactory.registerProvider(IOExceptionMapper.class);
+        
+        Blockchain blockchain = BlockchainFactory.getBlockchain();
+        IPFSClient ipfs = new CmdLineIPFSClient();
+        contentManager = new AegeusContentManager(ipfs, blockchain);
+        
+        INSTANCE = this;
+    }
+
+    public ContentManager getContentManager() {
+        return contentManager;
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        HashSet<Object> singletons = new HashSet<Object>();
+        Collections.addAll(singletons, config, contentManager);
+        return singletons;
+    }
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        HashSet<Class<?>> classes = new HashSet<Class<?>>();
+        classes.add(AegeusResource.class);
+        return classes;
+    }
+    
+    public static URL rpcUrl() {
+        URL rpcUrl;
+        String urlstr = System.getenv().get(Constants.ENV_JSONRPC_URL);
+        String user = System.getenv().get(Constants.ENV_JSONRPC_USER);
+        String pass = System.getenv().get(Constants.ENV_JSONRPC_PASS);
+        if (urlstr != null) {
+            try {
+                rpcUrl = new URL(String.format("http://%s", urlstr));
+                String userInfo = rpcUrl.getUserInfo();
+                if (userInfo == null && user != null && pass != null) {
+                    String protocol = rpcUrl.getProtocol();
+                    String host = rpcUrl.getHost();
+                    int port = rpcUrl.getPort();
+                    String path = rpcUrl.getPath();
+                    rpcUrl = new URL(String.format("%s://%s:%s@%s:%d%s", protocol, user, pass, host, port, path));
+                }
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        } else {
+            rpcUrl = BitcoinJSONRPCClient.DEFAULT_JSONRPC_REGTEST_URL;
+        }
+        return rpcUrl;
+    }
+    
     // Entry point with no system exit
     private static void mainInternal(String[] args) throws Exception {
         
@@ -108,78 +200,6 @@ public class AegeusApplication extends Application {
         } catch (IOException e) {
             // ignore
         }
-    }
-    
-    public static AegeusServer serverStart() {
-        
-        Blockchain blockchain = BlockchainFactory.getBlockchain(rpcUrl(), AegeusBlockchain.class);
-        String networkName = blockchain.getNetwork().getClass().getSimpleName();
-        BitcoindRpcClient rpcclient = ((RpcClientSupport) blockchain).getRpcClient();
-        LOG.info("{} Version: {}",  networkName, rpcclient.getNetworkInfo().version());
-        
-        IPFSClient ipfs = new CmdLineIPFSClient();
-        LOG.info("IPFS Version: {}",  ipfs.version().split(" ")[2]);
-        
-        Builder builder = Undertow.builder().addHttpListener(config.port, config.host);
-        UndertowJaxrsServer jaxrsServer = new UndertowJaxrsServer().start(builder);
-        jaxrsServer.deploy(AegeusApplication.class);
-        
-        aegeusServer = new AegeusServer(jaxrsServer, config);
-        LOG.info("Aegeus JAXRS: {}",  aegeusServer.getRootURL());
-        
-        return aegeusServer;
-    }
-    
-    public static void serverStop() {
-
-        if (aegeusServer != null) {
-            aegeusServer.stop();
-            aegeusServer = null;
-        }
-    }
-    
-    public AegeusApplication() {
-        ResteasyProviderFactory providerFactory = ResteasyProviderFactory.getInstance();
-        providerFactory.registerProvider(GeneralSecurityExceptionMapper.class);
-        providerFactory.registerProvider(RuntimeExceptionMapper.class);
-        providerFactory.registerProvider(IOExceptionMapper.class);
-    }
-
-    @Override
-    public Set<Object> getSingletons() {
-        return Collections.singleton(config);
-    }
-
-    @Override
-    public Set<Class<?>> getClasses() {
-        HashSet<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(AegeusResource.class);
-        return classes;
-    }
-    
-    public static URL rpcUrl() {
-        URL rpcUrl;
-        String urlstr = System.getenv().get(Constants.ENV_JSONRPC_URL);
-        String user = System.getenv().get(Constants.ENV_JSONRPC_USER);
-        String pass = System.getenv().get(Constants.ENV_JSONRPC_PASS);
-        if (urlstr != null) {
-            try {
-                rpcUrl = new URL(String.format("http://%s", urlstr));
-                String userInfo = rpcUrl.getUserInfo();
-                if (userInfo == null && user != null && pass != null) {
-                    String protocol = rpcUrl.getProtocol();
-                    String host = rpcUrl.getHost();
-                    int port = rpcUrl.getPort();
-                    String path = rpcUrl.getPath();
-                    rpcUrl = new URL(String.format("%s://%s:%s@%s:%d%s", protocol, user, pass, host, port, path));
-                }
-            } catch (MalformedURLException ex) {
-                throw new IllegalStateException(ex);
-            }
-        } else {
-            rpcUrl = BitcoinJSONRPCClient.DEFAULT_JSONRPC_REGTEST_URL;
-        }
-        return rpcUrl;
     }
     
     public static class AegeusServer {

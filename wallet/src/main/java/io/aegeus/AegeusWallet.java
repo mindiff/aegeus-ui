@@ -38,6 +38,7 @@ import io.nessus.TxOutput;
 import io.nessus.bitcoin.BitcoinAddress;
 import io.nessus.utils.AssertArgument;
 import io.nessus.utils.AssertState;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 import wf.bitcoin.krotjson.HexCoder;
 
@@ -70,6 +71,24 @@ public class AegeusWallet extends AbstractWallet {
         return new BitcoinAddress(this, rawAddr, labels);
     }
 
+    /**
+     * [FIXME #13] listlockunspent may return stale data
+     * https://github.com/AegeusCoin/aegeus/issues/13
+     */
+    @Override
+    protected Tx getLockedTransaction(String txId) {
+        Tx result = null;
+        try {
+            result = super.getTransaction(txId);
+        } catch (BitcoinRPCException ex) {
+            if (ex.getMessage().contains("Invalid or non-wallet transaction id")) {
+                return null;
+            }
+            throw ex;
+        }
+        return result;
+    }
+    
     @Override
     public String sendTx(Tx tx) {
         

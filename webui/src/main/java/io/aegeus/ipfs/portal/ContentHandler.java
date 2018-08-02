@@ -409,7 +409,7 @@ public class ContentHandler implements HttpHandler {
         context.put("gatewayUrl", gatewayURI);
         context.put("toaddrs", toaddrs);
         context.put("addr", paddr);
-        context.put("file", new SFHandle(rawAddr, relPath, cid, false));
+        context.put("file", new SFHandle(cid, rawAddr, relPath, true, true));
         
         return "templates/portal-send.vm";
     }

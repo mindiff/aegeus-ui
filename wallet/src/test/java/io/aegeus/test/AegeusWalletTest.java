@@ -52,7 +52,8 @@ public class AegeusWalletTest extends AbstractAegeusTest {
         BigDecimal balBob = wallet.getBalance(addrBob);
         Assert.assertTrue(BigDecimal.ZERO.compareTo(balBob) < 0);
 
-        BigDecimal dataAmount = network.getDustThreshold().multiply(BigDecimal.TEN);
+        BigDecimal dustAmount = network.getDustThreshold();
+        BigDecimal dataAmount = dustAmount.multiply(BigDecimal.TEN);
         BigDecimal dataFee = network.getMinDataAmount();
         BigDecimal spendAmount = dataAmount.add(dataFee);
         
@@ -64,9 +65,11 @@ public class AegeusWalletTest extends AbstractAegeusTest {
 
         byte[] dataIn = "IPFS".getBytes();
         
-        Tx tx = new TxBuilder()
-                .unspentInputs(utxos)
-                .output(new TxOutput(changeAddr.getAddress(), changeAmount))
+        TxBuilder builder = new TxBuilder().unspentInputs(utxos);
+        if (dustAmount.compareTo(changeAmount) < 0) {
+            builder.output(new TxOutput(changeAddr.getAddress(), changeAmount));
+        }
+        Tx tx = builder
                 .output(new TxOutput(addrBob.getAddress(), dataAmount, dataIn))
                 .build();
 
@@ -80,11 +83,17 @@ public class AegeusWalletTest extends AbstractAegeusTest {
         // Verify that OP_RETURN data has been recorded
         tx = wallet.getTransaction(txId);
         List<TxOutput> outputs = tx.outputs();
-        Assert.assertEquals(3, outputs.size());
-        Assert.assertEquals(changeAddr.getAddress(), outputs.get(0).getAddress());
-        Assert.assertEquals(addrBob.getAddress(), outputs.get(1).getAddress());
-        Assert.assertNotNull(outputs.get(2).getData());
-        byte[] dataOut = outputs.get(2).getData();
+        TxOutput lastOut = outputs.get(outputs.size() - 1);
+        if (dustAmount.compareTo(changeAmount) < 0) {
+            Assert.assertEquals(3, outputs.size());
+            Assert.assertEquals(changeAddr.getAddress(), outputs.get(0).getAddress());
+            Assert.assertEquals(addrBob.getAddress(), outputs.get(1).getAddress());
+        } else {
+            Assert.assertEquals(2, outputs.size());
+            Assert.assertEquals(addrBob.getAddress(), outputs.get(0).getAddress());
+        }
+        Assert.assertNotNull(lastOut.getData());
+        byte[] dataOut = lastOut.getData();
         Assert.assertEquals("Expected OP_RETURN", 0x6A, dataOut[0]);
         Assert.assertEquals(dataIn.length + 2, dataOut.length);
         Assert.assertArrayEquals(dataIn, Arrays.copyOfRange(dataOut, 2, dataOut.length));

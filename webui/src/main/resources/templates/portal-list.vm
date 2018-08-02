@@ -35,7 +35,7 @@
 
     <table>
     #foreach( $file in $files )
-        #if ( $file.cid )
+        #if ( $file.cid && $file.available )
             <tr>
             <form id="form-$file.cid" action="/portal/fget">
             <input type="hidden" name="addr" value="$addr.address">
@@ -54,7 +54,7 @@
     
     <table>
     #foreach( $file in $files )
-        #if ( ! $file.cid )
+        #if ( ! $file.cid && $file.available )
             <tr>
             <td>$file.path</td>
             <td>&nbsp;</td>
