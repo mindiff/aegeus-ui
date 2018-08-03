@@ -15,13 +15,9 @@ import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.nessus.Blockchain;
-import io.nessus.BlockchainFactory;
 import io.nessus.Wallet.Address;
 import io.nessus.ipfs.ContentManager;
 import io.nessus.ipfs.FHandle;
-import io.nessus.ipfs.IPFSClient;
-import io.nessus.ipfs.impl.CmdLineIPFSClient;
 import io.nessus.utils.AssertState;
 
 public class AegeusResource implements AegeusEndpoint {
@@ -32,10 +28,8 @@ public class AegeusResource implements AegeusEndpoint {
 
     public AegeusResource() throws IOException {
 
-        Blockchain blockchain = BlockchainFactory.getBlockchain();
-        IPFSClient ipfs = new CmdLineIPFSClient();
-
-        cntmgr = new AegeusContentManager(ipfs, blockchain);
+        AegeusApplication app = AegeusApplication.getInstance();
+        cntmgr = app.getContentManager();
     }
 
     @Override

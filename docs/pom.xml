@@ -60,9 +60,9 @@
                     
                     $ ipfs add -r docs/target/docs/html
                     ...
-                    added QmTMhasbuhci6z8Tbop9gzApQcCTw6DF2KRqgBkwAMtsaB html
+                    added QmPg2gju5Uh8o5mxX4RcjbvnFRsHfcasikWYPqCtWSKwWX html
                     
-                    http://ipfs.io/ipfs/QmTMhasbuhci6z8Tbop9gzApQcCTw6DF2KRqgBkwAMtsaB
+                    http://ipfs.io/ipfs/QmPg2gju5Uh8o5mxX4RcjbvnFRsHfcasikWYPqCtWSKwWX
                     -->
                 </configuration>
             </plugin>

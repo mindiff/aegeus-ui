@@ -19,7 +19,7 @@
     <properties>
         <version.args4j>2.0.31</version.args4j>
         <version.apache.velocity>1.7</version.apache.velocity>
-        <version.io.nessus>1.0.0.Alpha2</version.io.nessus>
+        <version.io.nessus>1.0.0.Alpha3</version.io.nessus>
         <version.io.undertow>2.0.9.Final</version.io.undertow>
         <version.jboss.resteasy>3.6.0.Final</version.jboss.resteasy>
         <version.junit>4.11</version.junit>
