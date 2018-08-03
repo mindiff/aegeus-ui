@@ -74,14 +74,6 @@
 <form action="/portal/impkey">
 <tr><td><input name="label" type="text" value="$envLabel"></td><td><input name="impkey" type="text" size="40"></td><td><input type="submit"></td></tr>
 </form>
-
-<tr><td>&nbsp;</td></tr>
-
-<tr><td><h2>Send All Funds</h2></td></tr>
-<form action="/portal/sendall">
-<input name="label" type="hidden" value="$envLabel">
-<tr class="gray"><td>$envLabel</td><td><input name="toaddr" type="text" size="40"></td><td><input type="submit"></td></tr>
-</form>
 </table>
 
 

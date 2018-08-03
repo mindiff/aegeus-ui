@@ -1,7 +1,5 @@
 package io.aegeus.ipfs.portal;
 
-import static io.nessus.Wallet.ALL_FUNDS;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -161,13 +159,6 @@ public class ContentHandler implements HttpHandler {
             actRegisterAddress(exchange, context);
         } 
         
-        // Action send all funds
-        
-        else if (relPath.startsWith("/portal/sendall")) {
-            
-            actSendAllFunds(exchange, context);
-        } 
-        
         // Action send IPFS file
         
         else if (relPath.startsWith("/portal/sendcid")) {
@@ -317,16 +308,6 @@ public class ContentHandler implements HttpHandler {
                 }
             }
         }).start();
-        
-        redirectHomePage(exchange);
-    }
-
-    private void actSendAllFunds(HttpServerExchange exchange, VelocityContext context) throws Exception {
-        Map<String, Deque<String>> qparams = exchange.getQueryParameters();
-        String toAddr = qparams.get("toaddr").getFirst();
-        String label = qparams.get("label").getFirst();
-        
-        wallet.sendFromLabel(label, toAddr, ALL_FUNDS);
         
         redirectHomePage(exchange);
     }

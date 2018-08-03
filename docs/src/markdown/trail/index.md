@@ -17,7 +17,7 @@ Without further ado, lets dive right into what we have here ...
 
 Our first actor is Bob. He has heard about what [Aegeus](https://aegeus.io) is doing with IPFS and would like to give Marry, who we will meet later, an encrypted copy of his medical records. For ensurance reasons, he needs proof that Marry has been given access to these records by a certain date. Needless to say, he does not want anybody else, but Marry, to be able to access these records.
 
-Bob visits Aegeus here: [http://167.99.32.83:8082/portal](http://167.99.32.83:8082/portal)
+Bob visits Aegeus here: [http://127.0.0.1:8082/portal](http://127.0.0.1:8082/portal)
 
 ![bob-home-01](img/bob-home-01.png)
 

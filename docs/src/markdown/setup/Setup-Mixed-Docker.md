@@ -52,9 +52,11 @@ Then, verify that this also works from within docker
 For this to work, your IPFS daemon needs to bind to an external IP
 
     ipfs config Addresses.API "/ip4/0.0.0.0/tcp/5001"
+    ipfs config Addresses.Gateway "/ip4/0.0.0.0/tcp/8080"
     ipfs daemon &
     ...    
     API server listening on /ip4/0.0.0.0/tcp/5001
+    Gateway (readonly) server listening on /ip4/0.0.0.0/tcp/8080
     Daemon is ready
  
 Verify that this works
