@@ -52,6 +52,11 @@
     <td>
         <form action="/portal/addurl">
         <input name="addr" type="hidden" value="$addr.address">
+        <input name="path" type="text" size="80" value="$addr.label/README.md">
+    </td>
+</tr>
+<tr>
+    <td>
         <input name="url" type="text" size="80" value="https://raw.githubusercontent.com/AegeusCoin/aegeus/master/README.md">
     </td>
 </tr>

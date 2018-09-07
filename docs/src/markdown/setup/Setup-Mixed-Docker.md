@@ -42,7 +42,7 @@ Verify that this works
     
 Then, verify that this also works from within docker
 
-    docker run -it --entrypoint=bash aegeus/aegeus-ipfs
+    docker run -it --entrypoint=bash aegeus/aegeus-jaxrs
     
     export LOCALIP=192.168.178.20
     curl --data-binary '{"method": "getinfo"}' http://aeg:aegpass@192.168.178.20:51473
@@ -66,7 +66,7 @@ Verify that this works
     
 Then, verify that this also works from within docker
 
-    docker run -it --entrypoint=bash aegeus/aegeus-ipfs
+    docker run -it --entrypoint=bash aegeus/aegeus-jaxrs
     
     export LOCALIP=192.168.178.20
     ipfs --api=/ip4/$LOCALIP/tcp/5001 version

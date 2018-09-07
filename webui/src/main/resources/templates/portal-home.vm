@@ -41,7 +41,11 @@
             <td>$addr.address</td>
             <td>&nbsp;</td>
         #else
-            <td><a href="/portal/plist?addr=$addr.address">$addr.address</a></td>
+            #if ( $addr.balance == 0 )
+                <td>$addr.address</td>
+            #else
+                <td><a href="/portal/plist?addr=$addr.address">$addr.address</a></td>
+            #end
             <td>$addr.balance</td>
         #end
         

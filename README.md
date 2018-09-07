@@ -4,7 +4,7 @@ Here we proudly bring you a preview of the Aegeus user interface.
 
 ![preview](docs/src/markdown/trail/img/bob-list-03-small.png)
 
-A full walk through of the demo is here: [QmWgNYqVXNP1b64DV958uBWdx7u8fKRvSYQ2wmAvjoT3DC](https://ipfs.io/ipfs/QmWgNYqVXNP1b64DV958uBWdx7u8fKRvSYQ2wmAvjoT3DC/trail)
+A full walk through of the demo is here: [QmPEs1wGUi75us4Qdr1bxfF9czNy4fNy3n1752yRKhQVbz](https://ipfs.io/ipfs/QmPEs1wGUi75us4Qdr1bxfF9czNy4fNy3n1752yRKhQVbz/trail)
 
 ### Installing Docker 
 
