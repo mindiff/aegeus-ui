@@ -4,7 +4,7 @@ Here we proudly bring you a preview of the Aegeus user interface.
 
 ![preview](docs/src/markdown/trail/img/bob-list-03-small.png)
 
-A full walk through of the demo is here: [QmPg2gju5Uh8o5mxX4RcjbvnFRsHfcasikWYPqCtWSKwWX](https://ipfs.io/ipfs/QmPg2gju5Uh8o5mxX4RcjbvnFRsHfcasikWYPqCtWSKwWX/trail)
+A full walk through of the demo is here: [QmPEs1wGUi75us4Qdr1bxfF9czNy4fNy3n1752yRKhQVbz](https://ipfs.io/ipfs/QmPEs1wGUi75us4Qdr1bxfF9czNy4fNy3n1752yRKhQVbz/trail)
 
 ### Installing Docker 
 
@@ -69,6 +69,8 @@ In case you need to connect the IPFS swarm to this instance, you can get the net
     export EXTERNALIP=167.99.32.83
     echo "ipfs swarm connect /ip4/$EXTERNALIP/tcp/4001/ipfs/`docker exec aeg-ipfs ipfs config Identity.PeerID`"
     
+and then on some other IPFS instance connect to the Aegeus IPFS daemon like this ...
+
     ipfs swarm connect /ip4/167.99.32.83/tcp/4001/ipfs/QmabAtE8qXJKDJ3SnxX18ZfEg9xMKdqoiA3KhW58hi4pmL
 
 You can always get the system out for a running service like this ...

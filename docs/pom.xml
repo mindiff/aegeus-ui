@@ -17,23 +17,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <target>
-                        <copy todir="src/markdown/setup"><fileset dir="../docker/setup"/></copy>
-                    </target>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>com.ruleoftech</groupId>
                 <artifactId>markdown-page-generator-plugin</artifactId>
                 <executions>
@@ -60,9 +43,9 @@
                     
                     $ ipfs add -r docs/target/docs/html
                     ...
-                    added QmPg2gju5Uh8o5mxX4RcjbvnFRsHfcasikWYPqCtWSKwWX html
+                    added QmPEs1wGUi75us4Qdr1bxfF9czNy4fNy3n1752yRKhQVbz html
                     
-                    http://ipfs.io/ipfs/QmPg2gju5Uh8o5mxX4RcjbvnFRsHfcasikWYPqCtWSKwWX
+                    http://ipfs.io/ipfs/QmWgNYqVXNP1b64DV958uBWdx7u8fKRvSYQ2wmAvjoT3DC
                     -->
                 </configuration>
             </plugin>

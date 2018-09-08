@@ -42,7 +42,7 @@ Verify that this works
     
 Then, verify that this also works from within docker
 
-    docker run -it --entrypoint=bash aegeus/aegeus-ipfs
+    docker run -it --entrypoint=bash aegeus/aegeus-jaxrs
     
     export LOCALIP=192.168.178.20
     curl --data-binary '{"method": "getinfo"}' http://aeg:aegpass@192.168.178.20:51473
@@ -52,9 +52,11 @@ Then, verify that this also works from within docker
 For this to work, your IPFS daemon needs to bind to an external IP
 
     ipfs config Addresses.API "/ip4/0.0.0.0/tcp/5001"
+    ipfs config Addresses.Gateway "/ip4/0.0.0.0/tcp/8080"
     ipfs daemon &
     ...    
     API server listening on /ip4/0.0.0.0/tcp/5001
+    Gateway (readonly) server listening on /ip4/0.0.0.0/tcp/8080
     Daemon is ready
  
 Verify that this works
@@ -64,7 +66,7 @@ Verify that this works
     
 Then, verify that this also works from within docker
 
-    docker run -it --entrypoint=bash aegeus/aegeus-ipfs
+    docker run -it --entrypoint=bash aegeus/aegeus-jaxrs
     
     export LOCALIP=192.168.178.20
     ipfs --api=/ip4/$LOCALIP/tcp/5001 version
