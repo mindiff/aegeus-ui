@@ -31,8 +31,9 @@ For a mixed setup with already running IPFS & AEG service and newly hosted Docke
 
 In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ... 
 
+    export EXTERNALIP=167.99.32.83
     docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
-    docker run --detach --name aeg-ipfs -p 4001:4001 -p 8080:8080 --expose 5001 --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
+    docker run --detach --name aeg-ipfs -p 4001:4001 -p 8080:8080 --expose 5001 -e EXTERNALIP=$EXTERNALIP --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
     docker run --detach --name aeg-jaxrs -p 8081:8081 --link aegd:aeg --link aeg-ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs
     docker run --detach --name aeg-webui -p 8082:8082 --link aegd:aeg --link aeg-ipfs:ipfs --link aeg-jaxrs:jaxrs --memory=200m --memory-swap=2g --env AEG_WEBUI_LABEL=Bob aegeus/aegeus-webui
 
@@ -56,17 +57,19 @@ It'll take a little while for the network to sync. You can watch progress like t
 
 To start the Aegeus IPFS daemon in Docker, you can run ...
 
+    export EXTERNALIP=167.99.32.83
+    
     docker run --detach \
         -p 4001:4001 \
         -p 8080:8080 \
         --expose 5001 \
+        --env EXTERNALIP=$EXTERNALIP \
         --memory=200m --memory-swap=2g \
         --name aeg-ipfs \
         aegeus/aegeus-ipfs
 
 In case you need to connect the IPFS swarm to this instance, you can get the network ID like this ...
 
-    export EXTERNALIP=167.99.32.83
     echo "ipfs swarm connect /ip4/$EXTERNALIP/tcp/4001/ipfs/`docker exec aeg-ipfs ipfs config Identity.PeerID`"
     
 and then on some other IPFS instance connect to the Aegeus IPFS daemon like this ...
@@ -148,7 +151,7 @@ The WebUI also reports some connection properties.
     docker logs webui
     
     AEG JAXRS: http://172.17.0.4:8081/aegeus
-    IPFS Gateway: http://172.17.0.2:8080/ipfs
+    IPFS Gateway: http://167.99.32.83:8080/ipfs
     AEG WebUI: http://0.0.0.0:8082/portal
     AegeusBlockchain: http://aeg:*******@172.17.0.3:51473
     AegeusNetwork Version: 2000000

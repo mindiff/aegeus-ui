@@ -86,12 +86,14 @@ docker push aegeus/aegeus-ipfs:$IPFS_VERSION
 
 ```
 export NAME=aeg-ipfs
+export EXTERNALIP=167.99.32.83
 
 docker rm -f $NAME
 docker run --detach \
     -p 4001:4001 \
     -p 8080:8080 \
     --expose 5001 \
+    --env EXTERNALIP=$EXTERNALIP \
     --memory=200m --memory-swap=2g \
     --name $NAME \
     aegeus/aegeus-ipfs
