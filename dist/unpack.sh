@@ -12,6 +12,6 @@ cd $CURDIR
 cd $HOMEDIR/target
 for f in `ls *.tgz`; 
 do
-    echo "unpack: $f"
+    echo $f
     tar xzf $f
 done
