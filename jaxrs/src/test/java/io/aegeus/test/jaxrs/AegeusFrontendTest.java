@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,27 +50,28 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
     @Before
     public void before() {
         
-        // Unlock all UTXOs
-        wallet.listLockUnspent(Arrays.asList(addrBob)).stream().forEach(utxo -> wallet.lockUnspent(utxo, true));
-        wallet.listLockUnspent(Arrays.asList(addrMarry)).stream().forEach(utxo -> wallet.lockUnspent(utxo, true));
+        redeemLockedUtxos(LABEL_BOB, addrBob);
+        redeemLockedUtxos(LABEL_MARRY, addrMarry);
         
-        // Redeem all locked UTXOs
-        List<UTXO> utxos = wallet.listUnspent(LABEL_BOB);
-        BigDecimal amount = subtractFee(getUTXOAmount(utxos));
-        wallet.sendTx(new TxBuilder()
-                .unspentInputs(utxos)
-                .output(addrBob.getAddress(), amount)
-                .build());
+        // Verify that Bob has some funds
+        BigDecimal balBob = wallet.getBalance(addrBob);
+        Assert.assertTrue(BigDecimal.ZERO.compareTo(balBob) < 0);
         
-        // Redeem all locked UTXOs
-        utxos = wallet.listUnspent(LABEL_MARRY);
-        amount = subtractFee(getUTXOAmount(utxos));
-        wallet.sendTx(new TxBuilder()
-                .unspentInputs(utxos)
-                .output(addrMarry.getAddress(), amount)
-                .build());
+        // Verify that Marry has some funds
+        BigDecimal balMarry = wallet.getBalance(addrMarry);
+        if (BigDecimal.ZERO.compareTo(balMarry) == 0) {
+            BigDecimal amount = balBob.divide(new BigDecimal(2));
+            wallet.sendFromLabel(LABEL_BOB, addrMarry.getAddress(), amount);
+        }
     }
-    
+
+    @After
+    public void after() {
+        
+        redeemLockedUtxos(LABEL_BOB, addrBob);
+        redeemLockedUtxos(LABEL_MARRY, addrMarry);
+    }
+
     @Test
     public void basicWorkflow() throws Exception {
 
@@ -199,5 +201,22 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
         }
         
         return fhandle;
+    }
+
+    private void redeemLockedUtxos(String label, Address addr) {
+        
+        // Unlock all UTXOs
+        wallet.listLockUnspent(Arrays.asList(addr)).stream().forEach(utxo -> wallet.lockUnspent(utxo, true));
+        
+        // Redeem all locked UTXOs
+        List<UTXO> utxos = wallet.listUnspent(label);
+        BigDecimal utxoAmount = getUTXOAmount(utxos);
+        if (BigDecimal.ZERO.compareTo(utxoAmount) < 0) {
+            BigDecimal amount = subtractFee(utxoAmount);
+            wallet.sendTx(new TxBuilder()
+                    .unspentInputs(utxos)
+                    .output(addr.getAddress(), amount)
+                    .build());
+        }
     }
 }

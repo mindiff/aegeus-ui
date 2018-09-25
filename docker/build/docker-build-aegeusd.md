@@ -137,7 +137,6 @@ docker push aegeus/aegeusd:$NVERSION-$BLOCKCOUNT
 
 ```
 export MNNAME=aegd
-export MNEXTIP=167.99.32.83
 
 docker rm -f $MNNAME
 docker run --detach \
@@ -148,6 +147,6 @@ docker run --detach \
 
 watch docker exec $MNNAME aegeus-cli getinfo
 
-docker exec $MNNAME tail -f /etc/aegeusd/debug.log
+docker exec $MNNAME tail -f /var/lib/aegeusd/debug.log
 ```
 
