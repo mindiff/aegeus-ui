@@ -48,7 +48,7 @@ public class AegeusWalletTest extends AbstractAegeusTest {
 
         showAccountBalances();
         
-        // Verify that Bob has som funds
+        // Verify that Bob has some funds
         BigDecimal balBob = wallet.getBalance(addrBob);
         Assert.assertTrue(BigDecimal.ZERO.compareTo(balBob) < 0);
 

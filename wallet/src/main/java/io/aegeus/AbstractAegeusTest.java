@@ -1,5 +1,7 @@
 package io.aegeus;
 
+import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -32,7 +34,16 @@ public abstract class AbstractAegeusTest extends AbstractBlockchainTest {
     @AfterClass
     public static void afterAegeusTest() throws Exception {
 
-        wallet.redeemChange(LABEL_BOB, addrBob);
-        wallet.redeemChange(LABEL_MARRY, addrMarry);
+        redeemChange(LABEL_BOB, addrBob);
+        redeemChange(LABEL_MARRY, addrMarry);
+    }
+
+    // [TODO] Remove workaround for #42
+    // https://github.com/tdiesler/nessus/issues/42
+    private static void redeemChange(String label, Address addr) {
+        List<Address> addrs = wallet.getChangeAddresses(label);
+        if (!addrs.isEmpty()) {
+            wallet.redeemChange(label, addr);
+        }
     }
 }
