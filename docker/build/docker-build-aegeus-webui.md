@@ -4,13 +4,13 @@
 rm -rf docker
 mkdir -p docker
 
-export NVERSION=1.0.0.Alpha4-SNAPSHOT
+export NVERSION=1.0.0.Alpha4
 
 tar xzf aegeus-dist-$NVERSION-deps.tgz -C docker
 tar xzf aegeus-dist-$NVERSION-proj.tgz -C docker
 
 cat << EOF > docker/Dockerfile
-FROM aegeus/aegeus-ipfsj
+FROM nessusio/fedoraj
 
 # Install the binaries
 COPY aegeus-dist-$NVERSION aegeus-webui
@@ -34,14 +34,14 @@ Run the AEG WebUI
 
 ```
 export LABEL=Bob
-export NAME=aeg-webui
+export NAME=webui
 
 docker rm -f $NAME
 docker run --detach \
     -p 8082:8082 \
     --link aegd:aeg \
-    --link aeg-ipfs:ipfs \
-    --link aeg-jaxrs:jaxrs \
+    --link ipfs:ipfs \
+    --link jaxrs:jaxrs \
     --env AEG_WEBUI_LABEL=$LABEL \
     --memory=200m --memory-swap=2g \
     --name $NAME \

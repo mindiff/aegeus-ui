@@ -27,7 +27,7 @@ public class AegeusNetwork extends AbstractNetwork {
     /**
      * Dust is a txout less than 1820 * 3 = 5460 duffs
      * 
-     * @see https://github.com/AegeusCoin/aegeus/blob/master/src/primitives/transaction.h#L159
+     * https://github.com/AegeusCoin/aegeus/blob/master/src/primitives/transaction.h#L159
      */
     @Override
     public BigDecimal getDustThreshold() {

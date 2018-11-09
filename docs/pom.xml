@@ -40,12 +40,11 @@
                     <pegdownExtensions>FENCED_CODE_BLOCKS</pegdownExtensions>
                     
                     <!--
-                    
-                    $ ipfs add -r docs/target/docs/html
-                    ...
-                    added QmPEs1wGUi75us4Qdr1bxfF9czNy4fNy3n1752yRKhQVbz html
-                    
-                    http://ipfs.io/ipfs/QmWgNYqVXNP1b64DV958uBWdx7u8fKRvSYQ2wmAvjoT3DC
+                        $ ipfs add -r docs/target/docs/html
+                        ...
+                        added QmU4F4omxJhsQKktKVDjcS8Edpj7m96w1Y9zCcoYr8FsVJ html
+                        
+                        http://ipfs.io/ipfs/QmU4F4omxJhsQKktKVDjcS8Edpj7m96w1Y9zCcoYr8FsVJ
                     -->
                 </configuration>
             </plugin>

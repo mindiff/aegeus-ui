@@ -32,9 +32,10 @@ import io.nessus.BlockchainFactory;
 import io.nessus.RpcClientSupport;
 import io.nessus.ipfs.ContentManager;
 import io.nessus.ipfs.IPFSClient;
-import io.nessus.ipfs.impl.CmdLineIPFSClient;
+import io.nessus.ipfs.impl.DefaultIPFSClient;
 import io.nessus.utils.AssertState;
 import io.nessus.utils.StreamUtils;
+import io.nessus.utils.SystemUtils;
 import io.undertow.Undertow;
 import io.undertow.Undertow.Builder;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
@@ -68,15 +69,15 @@ public class AegeusApplication extends Application {
         }
     }
 
-    public static AegeusServer serverStart() {
+    public static AegeusServer serverStart() throws IOException {
         
         Blockchain blockchain = BlockchainFactory.getBlockchain(rpcUrl(), AegeusBlockchain.class);
         String networkName = blockchain.getNetwork().getClass().getSimpleName();
         BitcoindRpcClient rpcclient = ((RpcClientSupport) blockchain).getRpcClient();
         LOG.info("{} Version: {}",  networkName, rpcclient.getNetworkInfo().version());
         
-        IPFSClient ipfs = new CmdLineIPFSClient();
-        LOG.info("IPFS Version: {}",  ipfs.version().split(" ")[2]);
+        IPFSClient ipfs = new DefaultIPFSClient();
+        LOG.info("IPFS Version: {}",  ipfs.version());
         
         Builder builder = Undertow.builder().addHttpListener(config.port, config.host);
         UndertowJaxrsServer jaxrsServer = new UndertowJaxrsServer().start(builder);
@@ -107,7 +108,7 @@ public class AegeusApplication extends Application {
         providerFactory.registerProvider(IOExceptionMapper.class);
         
         Blockchain blockchain = BlockchainFactory.getBlockchain();
-        IPFSClient ipfs = new CmdLineIPFSClient();
+        IPFSClient ipfs = new DefaultIPFSClient();
         contentManager = new AegeusContentManager(ipfs, blockchain);
         
         INSTANCE = this;
@@ -133,9 +134,9 @@ public class AegeusApplication extends Application {
     
     public static URL rpcUrl() {
         URL rpcUrl;
-        String urlstr = System.getenv().get(Constants.ENV_JSONRPC_URL);
-        String user = System.getenv().get(Constants.ENV_JSONRPC_USER);
-        String pass = System.getenv().get(Constants.ENV_JSONRPC_PASS);
+        String urlstr = SystemUtils.getenv(Constants.ENV_JSONRPC_URL, null);
+        String user = SystemUtils.getenv(Constants.ENV_JSONRPC_USER, null);
+        String pass = SystemUtils.getenv(Constants.ENV_JSONRPC_PASS, null);
         if (urlstr != null) {
             try {
                 rpcUrl = new URL(String.format("http://%s", urlstr));
@@ -176,7 +177,7 @@ public class AegeusApplication extends Application {
         }
     }
 
-    private static void process(CmdLineParser parser, Options options) {
+    private static void process(CmdLineParser parser, Options options) throws IOException {
         
         if (options.args.contains("start")) {
             serverStart();

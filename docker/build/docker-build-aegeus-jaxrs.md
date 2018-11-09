@@ -4,13 +4,13 @@
 rm -rf docker
 mkdir -p docker
 
-export NVERSION=1.0.0.Alpha4-SNAPSHOT
+export NVERSION=1.0.0.Alpha4
 
 tar xzf aegeus-dist-$NVERSION-deps.tgz -C docker
 tar xzf aegeus-dist-$NVERSION-proj.tgz -C docker
 
 cat << EOF > docker/Dockerfile
-FROM aegeus/aegeus-ipfsj
+FROM nessusio/fedoraj
 
 # Install the binaries
 COPY aegeus-dist-$NVERSION aegeus-jaxrs
@@ -34,12 +34,12 @@ docker push aegeus/aegeus-jaxrs:$NVERSION
 ### Run the AEG JAXRS image
 
 ```
-export NAME=aeg-jaxrs
+export NAME=jaxrs
 
 docker rm -f $NAME
 docker run --detach \
     --link aegd:aeg \
-    --link aeg-ipfs:ipfs \
+    --link ipfs:ipfs \
     -p 8081:8081 \
     --memory=200m --memory-swap=2g \
     --name $NAME \

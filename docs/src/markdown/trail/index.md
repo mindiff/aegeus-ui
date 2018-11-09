@@ -15,7 +15,7 @@ Without further ado, lets dive right into what we have here ...
 
 ### Bob visits Aegeus 
 
-Our first actor is Bob. He has heard about what [Aegeus](https://aegeus.io) is doing with IPFS and would like to give Marry, who we will meet later, an encrypted copy of his medical records. For ensurance reasons, he needs proof that Marry has been given access to these records by a certain date. Needless to say, he does not want anybody else, but Marry, to be able to access these records.
+Our first actor is Bob. He has heard about what [Aegeus](https://aegeus.io) is doing with IPFS and would like to give Mary, who we will meet later, an encrypted copy of his medical records. For ensurance reasons, he needs proof that Mary has been given access to these records by a certain date. Needless to say, he does not want anybody else, but Mary, to be able to access these records.
 
 Bob visits Aegeus here: [http://127.0.0.1:8082/portal](http://127.0.0.1:8082/portal)
 
@@ -106,45 +106,45 @@ The Aegeus app can then __show__ us the decrypted content.
 
 ![bob-show-01](img/bob-show-01.png)
 
-### Marry visits Aegeus
+### Mary visits Aegeus
 
-Marry also has access to Aegeus. Like Bob, she has already registered her public key. 
+Mary also has access to Aegeus. Like Bob, she has already registered her public key. 
 
-Marry visits Aegeus here: [http://167.99.32.85:8082/portal](http://167.99.32.85:8082/portal)
+Mary visits Aegeus here: [http://167.99.32.85:8082/portal](http://167.99.32.85:8082/portal)
 
 ![marry-home-01](img/marry-home-01.png)
 
-### Bob imports Marry's address
+### Bob imports Mary's address
 
-Bob imports Marry's address like this 
+Bob imports Mary's address like this 
 
 ![bob-home-05](img/bob-home-05.png)
 
-Because Bob does not own Marry's private key, this is a "watch only" address. It allows Bob's wallet to see Marry's transactions - specifically her public encryption key.
+Because Bob does not own Mary's private key, this is a "watch only" address. It allows Bob's wallet to see Mary's transactions - specifically her public encryption key.
 
 ![bob-home-06](img/bob-home-06.png)
 
-### Bob sends his medical record to Marry
+### Bob sends his medical record to Mary
 
 Bob can now head over to his file list and click on __send__.
 
 ![bob-send-01](img/bob-send-01.png)
 
-### Marry gets Bob's medical record
+### Mary gets Bob's medical record
 
-After a while Marry's wallet sees the tranasaction on the Aegeus network and Marry's IPFS node will be able to see the IPFS file.
+After a while Mary's wallet sees the tranasaction on the Aegeus network and Mary's IPFS node will be able to see the IPFS file.
 
 ![marry-list-01](img/marry-list-01.png)
 
-### Marry decrypts Bob's medical record
+### Mary decrypts Bob's medical record
 
-Marry (and only Marry) can now get/decrypt that IPFS file.
+Mary (and only Mary) can now get/decrypt that IPFS file.
 
 ![marry-list-02](img/marry-list-02.png)
 
-### Marry takes a look at the content
+### Mary takes a look at the content
 
-The previous __get__ has first transferred the encrypted file to Marry's local storage and then decrypted it. 
+The previous __get__ has first transferred the encrypted file to Mary's local storage and then decrypted it. 
 Marr can now click __show__ on the decrypted file to view the content.
 
 ![marry-show-01](img/marry-show-01.png)

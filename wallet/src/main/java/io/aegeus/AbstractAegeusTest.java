@@ -16,7 +16,7 @@ public abstract class AbstractAegeusTest extends AbstractBlockchainTest {
     protected static AegeusWallet wallet;
 
     protected static Address addrBob;
-    protected static Address addrMarry;
+    protected static Address addrMary;
     
     @BeforeClass
     public static void beforeAegeusTest() throws Exception {
@@ -28,14 +28,14 @@ public abstract class AbstractAegeusTest extends AbstractBlockchainTest {
         importAddresses(wallet, AbstractAegeusTest.class);
         
         addrBob = wallet.getAddress(LABEL_BOB);
-        addrMarry = wallet.getAddress(LABEL_MARRY);
+        addrMary = wallet.getAddress(LABEL_MARY);
     }
     
     @AfterClass
     public static void afterAegeusTest() throws Exception {
 
         redeemChange(LABEL_BOB, addrBob);
-        redeemChange(LABEL_MARRY, addrMarry);
+        redeemChange(LABEL_MARY, addrMary);
     }
 
     // [TODO] Remove workaround for #42

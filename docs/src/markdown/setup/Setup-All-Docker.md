@@ -27,7 +27,7 @@ To start the Aegeus daemon in Docker, you can run ...
         -p 29328:29328 \
         --memory=200m --memory-swap=2g \
         --name aegd \
-        aegeus/aegeusd
+        aegeus/aegeusd:2.0.4
 
 It'll take a little while for the network to sync. You can watch progress like this ...
 
@@ -37,26 +37,28 @@ It'll take a little while for the network to sync. You can watch progress like t
 
 To start the Aegeus IPFS daemon in Docker, you can run ...
 
+    export GATEWAYIP=185.92.221.103
+    
     docker run --detach \
         -p 4001:4001 \
         -p 8080:8080 \
-        --expose 5001 \
+        --env GATEWAYIP=$GATEWAYIP \
         --memory=200m --memory-swap=2g \
-        --name aeg-ipfs \
+        --name ipfs \
         aegeus/aegeus-ipfs
 
 In case you need to connect the IPFS swarm to this instance, you can get the network ID like this ...
 
-    export EXTERNALIP=167.99.32.83
-    echo "ipfs swarm connect /ip4/$EXTERNALIP/tcp/4001/ipfs/`docker exec aeg-ipfs ipfs config Identity.PeerID`"
+    export GATEWAYIP=185.92.221.103
+    echo "ipfs swarm connect /ip4/$GATEWAYIP/tcp/4001/ipfs/`docker exec ipfs ipfs config Identity.PeerID`"
     
 and then on some other IPFS instance connect to the Aegeus IPFS daemon like this ...
 
-    ipfs swarm connect /ip4/167.99.32.83/tcp/4001/ipfs/QmabAtE8qXJKDJ3SnxX18ZfEg9xMKdqoiA3KhW58hi4pmL
+    ipfs swarm connect /ip4/185.92.221.103/tcp/4001/ipfs/QmabAtE8qXJKDJ3SnxX18ZfEg9xMKdqoiA3KhW58hi4pmL
 
 You can always get the system out for a running service like this ...
 
-    docker logs aeg-ipfs
+    docker logs ipfs
     
     initializing IPFS node at /root/.ipfs
     generating 2048-bit RSA keypair...done
@@ -84,18 +86,18 @@ To start the Aegeus bridge in Docker, you can run ...
     docker run --detach \
         -p 8081:8081 \
         --link aegd:aeg \
-        --link aeg-ipfs:ipfs \
+        --link ipfs:ipfs \
         --memory=200m --memory-swap=2g \
-        --name aeg-jaxrs \
+        --name jaxrs \
         aegeus/aegeus-jaxrs
 
 On bootstrap the bridge reports some connection properties.
 
-    docker logs aeg-jaxrs
+    docker logs jaxrs
     
     AegeusBlockchain: http://aeg:*******@172.17.0.3:51473
-    AegeusNetwork Version: 2000000
-    IPFS Version: 0.4.16
+    AegeusNetwork Version: 2000400
+    IPFS Version: 0.4.18
     Aegeus JAXRS: http://0.0.0.0:8081/aegeus
 
 Now, lets have a look at the available JSON-RPC methods
@@ -166,15 +168,17 @@ Before we connect to the bridge directly, lets first take look at the WebUI and 
 This is a prototype of the Aegeus UI. 
 
 To start up the Aegeus UI in Docker, you can run ...
-
+    
+    export LABEL=Bob
+    
     docker run --detach \
         -p 8082:8082 \
         --link aegd:aeg \
-        --link aeg-ipfs:ipfs \
-        --link aeg-jaxrs:jaxrs \
-        --env AEG_WEBUI_LABEL=Bob \
+        --link ipfs:ipfs \
+        --link jaxrs:jaxrs \
+        --env AEG_WEBUI_LABEL=$LABEL \
         --memory=200m --memory-swap=2g \
-        --name aeg-webui \
+        --name webui \
         aegeus/aegeus-webui
 
 Now that everything is running, it should look like this
@@ -182,9 +186,9 @@ Now that everything is running, it should look like this
     docker ps
     
     CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                      NAMES
-    ef410d403355        aegeus/aegeus-webui   "aegeus-webui"           4 seconds ago       Up 3 seconds        0.0.0.0:8082->8082/tcp                                     aeg-webui
-    5298b8ae05e5        aegeus/aegeus-jaxrs   "aegeus-jaxrs start"     5 seconds ago       Up 4 seconds        0.0.0.0:8081->8081/tcp                                     aeg-jaxrs
-    666ce368082d        aegeus/aegeus-ipfs    "aegeus-ipfs"            5 seconds ago       Up 4 seconds        0.0.0.0:4001->4001/tcp, 0.0.0.0:8080->8080/tcp, 5001/tcp   aeg-ipfs
+    ef410d403355        aegeus/aegeus-webui   "aegeus-webui"           4 seconds ago       Up 3 seconds        0.0.0.0:8082->8082/tcp                                     webui
+    5298b8ae05e5        aegeus/aegeus-jaxrs   "aegeus-jaxrs start"     5 seconds ago       Up 4 seconds        0.0.0.0:8081->8081/tcp                                     jaxrs
+    666ce368082d        aegeus/aegeus-ipfs    "aegeus-ipfs"            5 seconds ago       Up 4 seconds        0.0.0.0:4001->4001/tcp, 0.0.0.0:8080->8080/tcp, 5001/tcp   ipfs
     e0e9a8c50b00        aegeus/aegeusd        "aegeusd -datadir=..."   6 seconds ago       Up 5 seconds        0.0.0.0:29328->29328/tcp, 51473/tcp                        aegd
 
 The WebUI also reports some connection properties.

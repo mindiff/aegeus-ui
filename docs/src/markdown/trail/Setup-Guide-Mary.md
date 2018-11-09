@@ -1,5 +1,5 @@
 
-## Setup the AEG Demo for Marry
+## Setup the AEG Demo for Mary
 
 The AEG demo requires a working [Docker](https://www.docker.com/community-edition) environment. 
 
@@ -8,9 +8,9 @@ The AEG demo requires a working [Docker](https://www.docker.com/community-editio
 In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ... 
 
     docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
-    docker run --detach --name aeg-ipfs -p 4001:4001 -p 8080:8080 --expose 5001 --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
-    docker run --detach --name aeg-jaxrs -p 8081:8081 --link aegd:aeg --link aeg-ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs
-    docker run --detach --name aeg-webui -p 8082:8082 --link aegd:aeg --link aeg-ipfs:ipfs --link aeg-jaxrs:jaxrs --memory=200m --memory-swap=2g --env AEG_WEBUI_LABEL=Marry aegeus/aegeus-webui
+    docker run --detach --name ipfs -p 4001:4001 -p 8080:8080 --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
+    docker run --detach --name jaxrs -p 8081:8081 --link aegd:aeg --link ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs
+    docker run --detach --name webui -p 8082:8082 --link aegd:aeg --link ipfs:ipfs --link jaxrs:jaxrs --memory=200m --memory-swap=2g --env AEG_WEBUI_LABEL=Mary aegeus/aegeus-webui
 
 ### Running the AEG daemon image
 
@@ -31,39 +31,38 @@ In the steps below, you would have to replace `167.99.32.85` with the external I
     docker run --detach \
         -p 4001:4001 \
         -p 8080:8080 \
-        --expose 5001 \
         --memory=200m --memory-swap=2g \
-        --name aeg-ipfs \
+        --name ipfs \
         aegeus/aegeus-ipfs
 
     sleep 6
 
-    export EXTERNALIP=167.99.32.85
-    echo "docker exec aeg-ipfs ipfs swarm connect /ip4/$EXTERNALIP/tcp/4001/ipfs/`docker exec $NAME ipfs config Identity.PeerID`"
+    export GATEWAYIP=167.99.32.85
+    echo "docker exec ipfs ipfs swarm connect /ip4/$GATEWAYIP/tcp/4001/ipfs/`docker exec $NAME ipfs config Identity.PeerID`"
 
 ### Running the AEG JAXRS image
 
     docker run --detach \
         -p 8081:8081 \
         --link aegd:aeg \
-        --link aeg-ipfs:ipfs \
+        --link ipfs:ipfs \
         --memory=200m --memory-swap=2g \
-        --name aeg-jaxrs \
+        --name jaxrs \
         aegeus/aegeus-jaxrs
     
-    watch docker logs aeg-jaxrs
+    watch docker logs jaxrs
 
 ### Running the AEG WebUI image
 
     docker run --detach \
         -p 8082:8082 \
         --link aegd:aeg \
-        --link aeg-ipfs:ipfs \
-        --link aeg-jaxrs:jaxrs \
+        --link ipfs:ipfs \
+        --link jaxrs:jaxrs \
         --env AEG_WEBUI_LABEL=Bob \
         --memory=200m --memory-swap=2g \
-        --name aeg-webui \
+        --name webui \
         aegeus/aegeus-webui
     
-    watch docker logs aeg-webui
+    watch docker logs webui
   

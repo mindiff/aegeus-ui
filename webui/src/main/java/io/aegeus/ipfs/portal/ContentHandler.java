@@ -34,6 +34,7 @@ import io.nessus.Network;
 import io.nessus.Wallet;
 import io.nessus.Wallet.Address;
 import io.nessus.utils.StreamUtils;
+import io.nessus.utils.SystemUtils;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.RedirectHandler;
@@ -411,8 +412,7 @@ public class ContentHandler implements HttpHandler {
             addrs.add(new AddressDTO(addr, balance, pubKey != null));
         }
         
-        String envLabel = System.getenv().get(Constants.ENV_WEBUI_LABEL);
-        envLabel = envLabel != null ? envLabel : "Bob";
+        String envLabel = SystemUtils.getenv(Constants.ENV_WEBUI_LABEL, "Bob");
         
         context.put("envLabel", envLabel);
         context.put("addrs", addrs);

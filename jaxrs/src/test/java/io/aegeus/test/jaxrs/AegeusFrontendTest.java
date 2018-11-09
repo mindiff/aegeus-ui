@@ -44,24 +44,25 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
 
     @AfterClass
     public static void stop() throws Exception {
-        server.stop();
+        if (server != null)
+            server.stop();
     }
 
     @Before
     public void before() {
         
         redeemLockedUtxos(LABEL_BOB, addrBob);
-        redeemLockedUtxos(LABEL_MARRY, addrMarry);
+        redeemLockedUtxos(LABEL_MARY, addrMary);
         
         // Verify that Bob has some funds
         BigDecimal balBob = wallet.getBalance(addrBob);
         Assert.assertTrue(BigDecimal.ZERO.compareTo(balBob) < 0);
         
-        // Verify that Marry has some funds
-        BigDecimal balMarry = wallet.getBalance(addrMarry);
-        if (BigDecimal.ZERO.compareTo(balMarry) == 0) {
+        // Verify that Mary has some funds
+        BigDecimal balMary = wallet.getBalance(addrMary);
+        if (BigDecimal.ZERO.compareTo(balMary) == 0) {
             BigDecimal amount = balBob.divide(new BigDecimal(2));
-            wallet.sendFromLabel(LABEL_BOB, addrMarry.getAddress(), amount);
+            wallet.sendFromLabel(LABEL_BOB, addrMary.getAddress(), amount);
         }
     }
 
@@ -69,7 +70,7 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
     public void after() {
         
         redeemLockedUtxos(LABEL_BOB, addrBob);
-        redeemLockedUtxos(LABEL_MARRY, addrMarry);
+        redeemLockedUtxos(LABEL_MARY, addrMary);
     }
 
     @Test
@@ -87,14 +88,14 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
         String wasKey = client.findRegistation(addrBob.getAddress());
         Assert.assertEquals(encKey, wasKey);
         
-        // Register Marry's public encryption key
+        // Register Mary's public encryption key
         
-        encKey = client.register(addrMarry.getAddress());
+        encKey = client.register(addrMary.getAddress());
         Assert.assertNotNull(encKey);
         
-        // Find Marry's pubKey registration
+        // Find Mary's pubKey registration
         
-        wasKey = client.findRegistation(addrMarry.getAddress());
+        wasKey = client.findRegistation(addrMary.getAddress());
         Assert.assertEquals(encKey, wasKey);
         
         // Add content to IPFS
@@ -158,30 +159,30 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
         
         // Send content from IPFS
         
-        fhandle = client.send(addrBob.getAddress(), cid, addrMarry.getAddress(), timeout);
+        fhandle = client.send(addrBob.getAddress(), cid, addrMary.getAddress(), timeout);
         
-        Assert.assertEquals(addrMarry, wallet.findAddress(fhandle.getOwner()));
+        Assert.assertEquals(addrMary, wallet.findAddress(fhandle.getOwner()));
         Assert.assertEquals(relPath, Paths.get(fhandle.getPath()));
         Assert.assertTrue(fhandle.isEncrypted());
         Assert.assertNotNull(fhandle.getCid());
         
         // Find IPFS content on blockchain
         
-        String cidMarry = fhandle.getCid();
-        fhandle = findIPFSContent(addrMarry, cidMarry, timeout);
+        String cidMary = fhandle.getCid();
+        fhandle = findIPFSContent(addrMary, cidMary, timeout);
         Assert.assertTrue(fhandle.isAvailable());
         Assert.assertFalse(fhandle.isExpired());
         Assert.assertEquals(relPath, Paths.get(fhandle.getPath()));
-        Assert.assertEquals(addrMarry, wallet.findAddress(fhandle.getOwner()));
+        Assert.assertEquals(addrMary, wallet.findAddress(fhandle.getOwner()));
         Assert.assertTrue(fhandle.isEncrypted());
         Assert.assertNotNull(fhandle.getTxId());
         
         // Get content from IPFS
         
         relPath = Paths.get("marry/userfile.txt");
-        fhandle = client.get(addrMarry.getAddress(), fhandle.getCid(), relPath.toString(), timeout);
+        fhandle = client.get(addrMary.getAddress(), fhandle.getCid(), relPath.toString(), timeout);
         
-        Assert.assertEquals(addrMarry, wallet.findAddress(fhandle.getOwner()));
+        Assert.assertEquals(addrMary, wallet.findAddress(fhandle.getOwner()));
         Assert.assertEquals(relPath, Paths.get(fhandle.getPath()));
         Assert.assertFalse(fhandle.isEncrypted());
         Assert.assertNull(fhandle.getCid());
