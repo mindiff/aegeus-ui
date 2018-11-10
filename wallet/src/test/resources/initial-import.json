@@ -6,8 +6,16 @@
                 "labels": [ "Bob" ]
             },
             {
+                "privKey": "PNufzsY2EkXesnoSNaDv2TKAZngoJvJA6nhdGxsWGnZ9jviGukbJ",
+                "labels": [ "Bob", "(change)" ]
+            },
+            {
                 "privKey": "PRyMQhrufMrjotxEUZnXXTyx15jeqoz6e1qh9iyTnJtHuhLMqUv5",
                 "labels": [ "Mary" ]
+            },
+            {
+                "privKey": "PPpbKS4TGsgvqahTts9AA8b9HQWsSCE23DqLtXWCVcQ3Sax5kmCM",
+                "labels": [ "Mary", "(change)" ]
             },
             {
                 "pubKey": "AJ379Fcun7fh5Cq9LEjrogChD5PVmV4Gxn",

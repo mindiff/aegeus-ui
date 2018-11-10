@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -23,8 +22,6 @@ import io.aegeus.jaxrs.AegeusApplication;
 import io.aegeus.jaxrs.AegeusApplication.AegeusServer;
 import io.aegeus.jaxrs.AegeusClient;
 import io.aegeus.jaxrs.SFHandle;
-import io.nessus.Tx.TxBuilder;
-import io.nessus.UTXO;
 import io.nessus.Wallet.Address;
 
 public class AegeusFrontendTest extends AbstractAegeusTest {
@@ -202,22 +199,5 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
         }
 
         return fhandle;
-    }
-
-    private void redeemLockedUtxos(String label, Address addr) {
-
-        // Unlock all UTXOs
-        wallet.listLockUnspent(Arrays.asList(addr)).stream().forEach(utxo -> wallet.lockUnspent(utxo, true));
-
-        // Redeem all locked UTXOs
-        List<UTXO> utxos = wallet.listUnspent(label);
-        BigDecimal utxoAmount = getUTXOAmount(utxos);
-        if (BigDecimal.ZERO.compareTo(utxoAmount) < 0) {
-            BigDecimal amount = subtractFee(utxoAmount);
-            wallet.sendTx(new TxBuilder()
-                    .unspentInputs(utxos)
-                    .output(addr.getAddress(), amount)
-                    .build());
-        }
     }
 }

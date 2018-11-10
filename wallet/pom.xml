@@ -17,6 +17,10 @@
             <groupId>io.nessus</groupId>
             <artifactId>nessus-bitcoin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.nessus</groupId>
+            <artifactId>nessus-ipfs</artifactId>
+        </dependency>
 
         <!-- Provided -->
         <dependency>
