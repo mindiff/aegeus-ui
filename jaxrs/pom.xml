@@ -7,7 +7,7 @@
         <artifactId>aegeus</artifactId>
         <version>1.0.0.Alpha5-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>aegeus-jaxrs</artifactId>
 
     <name>Aegeus :: JAXRS</name>
@@ -18,7 +18,7 @@
             <artifactId>aegeus-wallet</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
@@ -51,7 +51,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
-        
+
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
@@ -64,7 +64,7 @@
     <!-- Build -->
     <build>
         <plugins>
-           <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
@@ -78,5 +78,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

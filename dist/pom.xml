@@ -7,7 +7,7 @@
         <artifactId>aegeus</artifactId>
         <version>1.0.0.Alpha5-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>aegeus-dist</artifactId>
     <packaging>pom</packaging>
 

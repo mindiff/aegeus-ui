@@ -7,7 +7,7 @@
         <artifactId>aegeus</artifactId>
         <version>1.0.0.Alpha5-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>aegeus-docs</artifactId>
     <packaging>pom</packaging>
 
@@ -35,15 +35,15 @@
                     <copyDirectories>css,trail/img</copyDirectories>
                     <recursiveInput>true</recursiveInput>
                     <transformRelativeMarkdownLinks>true</transformRelativeMarkdownLinks>
-                    
+
                     <!-- https://github.com/walokra/markdown-page-generator-plugin -->
                     <pegdownExtensions>FENCED_CODE_BLOCKS</pegdownExtensions>
-                    
+
                     <!--
                         $ ipfs add -r docs/target/docs/html
                         ...
                         added QmU4F4omxJhsQKktKVDjcS8Edpj7m96w1Y9zCcoYr8FsVJ html
-                        
+
                         http://ipfs.io/ipfs/QmU4F4omxJhsQKktKVDjcS8Edpj7m96w1Y9zCcoYr8FsVJ
                     -->
                 </configuration>

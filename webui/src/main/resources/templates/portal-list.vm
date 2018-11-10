@@ -28,9 +28,9 @@
 <input type="hidden" name="addr" value="$addr.address">
 <input type="submit" value="Add Content">
 </form>
-    
+
 #if ( ! $files.empty )
-    
+
     <h2>List of IPFS files</h2>
 
     <table>
@@ -51,7 +51,7 @@
     </table>
 
     <h2>List of local files</h2>
-    
+
     <table>
     #foreach( $file in $files )
         #if ( ! $file.cid && $file.available )

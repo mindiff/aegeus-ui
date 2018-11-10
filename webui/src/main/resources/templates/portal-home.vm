@@ -22,13 +22,13 @@
     <tr>
     </tr>
     #foreach( $addr in $addrs )
-        
+
         #if ( $addr.watchOnly )
             <tr class="gray">
         #else
             <tr>
         #end
-        
+
         #if ( $addr.label != "" )
             <td>$addr.label</td>
         #else
@@ -48,7 +48,7 @@
             #end
             <td>$addr.balance</td>
         #end
-        
+
         #if ( $addr.label != "" )
             #if ( ! $addr.registered && ! $addr.watchOnly && $addr.balance > 0 )
                 <td><a href="/portal/regaddr?addr=$addr.address">register</a></td>
@@ -57,9 +57,9 @@
             <td><a href="#" onclick="document.getElementById('form-assign-label-$velocityCount').submit();">assign</a></td>
             </form>
         #end
-        
+
         </tr>
-        
+
     #end
     </table>
 #end

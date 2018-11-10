@@ -43,25 +43,25 @@ import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 
 @ApplicationPath("/aegeus")
 public class AegeusApplication extends Application {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(AegeusApplication.class);
-    
+
     static final AegeusConfig config;
     static {
         int port = PortProvider.getPort();
         String host = PortProvider.getHost();
         config = new AegeusConfig(host, port);
     }
-    
+
     private static AegeusApplication INSTANCE;
     private static AegeusServer aegeusServer;
-    
+
     private final ContentManager contentManager;
-    
+
     public static void main(String[] args) throws Exception {
-        
+
         AegeusSanityCheck.verifyPlatform();
-        
+
         try {
             AegeusApplication.mainInternal(args);
         } catch (Throwable th) {
@@ -70,25 +70,25 @@ public class AegeusApplication extends Application {
     }
 
     public static AegeusServer serverStart() throws IOException {
-        
+
         Blockchain blockchain = BlockchainFactory.getBlockchain(rpcUrl(), AegeusBlockchain.class);
         String networkName = blockchain.getNetwork().getClass().getSimpleName();
         BitcoindRpcClient rpcclient = ((RpcClientSupport) blockchain).getRpcClient();
         LOG.info("{} Version: {}",  networkName, rpcclient.getNetworkInfo().version());
-        
+
         IPFSClient ipfs = new DefaultIPFSClient();
         LOG.info("IPFS Version: {}",  ipfs.version());
-        
+
         Builder builder = Undertow.builder().addHttpListener(config.port, config.host);
         UndertowJaxrsServer jaxrsServer = new UndertowJaxrsServer().start(builder);
         jaxrsServer.deploy(AegeusApplication.class);
-        
+
         aegeusServer = new AegeusServer(jaxrsServer, config);
         LOG.info("Aegeus JAXRS: {}",  aegeusServer.getRootURL());
-        
+
         return aegeusServer;
     }
-    
+
     public static void serverStop() {
 
         if (aegeusServer != null) {
@@ -96,21 +96,21 @@ public class AegeusApplication extends Application {
             aegeusServer = null;
         }
     }
-    
+
     static AegeusApplication getInstance() {
         return INSTANCE;
     }
-    
+
     public AegeusApplication() {
         ResteasyProviderFactory providerFactory = ResteasyProviderFactory.getInstance();
         providerFactory.registerProvider(GeneralSecurityExceptionMapper.class);
         providerFactory.registerProvider(RuntimeExceptionMapper.class);
         providerFactory.registerProvider(IOExceptionMapper.class);
-        
+
         Blockchain blockchain = BlockchainFactory.getBlockchain();
         IPFSClient ipfs = new DefaultIPFSClient();
         contentManager = new AegeusContentManager(ipfs, blockchain);
-        
+
         INSTANCE = this;
     }
 
@@ -131,7 +131,7 @@ public class AegeusApplication extends Application {
         classes.add(AegeusResource.class);
         return classes;
     }
-    
+
     public static URL rpcUrl() {
         URL rpcUrl;
         String urlstr = SystemUtils.getenv(Constants.ENV_JSONRPC_URL, null);
@@ -156,10 +156,10 @@ public class AegeusApplication extends Application {
         }
         return rpcUrl;
     }
-    
+
     // Entry point with no system exit
     private static void mainInternal(String[] args) throws Exception {
-        
+
         Options options = new Options();
         CmdLineParser parser = new CmdLineParser(options);
         try {
@@ -168,7 +168,7 @@ public class AegeusApplication extends Application {
             helpScreen(parser);
             throw ex;
         }
-        
+
         try {
             AegeusApplication.process(parser, options);
         } catch (Throwable th) {
@@ -178,16 +178,16 @@ public class AegeusApplication extends Application {
     }
 
     private static void process(CmdLineParser parser, Options options) throws IOException {
-        
+
         if (options.args.contains("start")) {
             serverStart();
-        } 
-        
+        }
+
         else if (options.args.contains("stop")) {
             serverStop();
             System.exit(0);
         }
-        
+
         else {
             helpScreen(parser);
         }
@@ -202,9 +202,9 @@ public class AegeusApplication extends Application {
             // ignore
         }
     }
-    
+
     public static class AegeusServer {
-        
+
         final UndertowJaxrsServer server;
         final AegeusConfig config;
 
@@ -212,7 +212,7 @@ public class AegeusApplication extends Application {
             this.server = server;
             this.config = config;
         }
-        
+
         public URL getRootURL() {
             try {
                 return new URL(String.format("http://%s:%d/aegeus", config.host, config.port));
@@ -220,7 +220,7 @@ public class AegeusApplication extends Application {
                 throw new IllegalStateException(ex);
             }
         }
-        
+
         public AegeusConfig getAegeusConfig() {
             return config;
         }
@@ -229,12 +229,12 @@ public class AegeusApplication extends Application {
             server.stop();
         }
     }
-    
+
     public static class AegeusConfig {
-        
+
         final String host;
         final int port;
-        
+
         AegeusConfig(String host, int port) {
             this.host = host;
             this.port = port;

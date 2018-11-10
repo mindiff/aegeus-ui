@@ -15,7 +15,7 @@
         <url>https://github.com/AegeusCoin/aegeus-ui</url>
         <tag>HEAD</tag>
     </scm>
-    
+
     <properties>
         <version.args4j>2.0.31</version.args4j>
         <version.apache.velocity>1.7</version.apache.velocity>
@@ -24,9 +24,10 @@
         <version.jboss.resteasy>3.6.0.Final</version.jboss.resteasy>
         <version.junit>4.11</version.junit>
         <version.slf4j>1.6.6</version.slf4j>
-                
+
         <!-- Plugin versions -->
         <version-codehaus-license-plugin>1.16</version-codehaus-license-plugin>
+        <version-editorconfig-maven-plugin>0.0.6</version-editorconfig-maven-plugin>
         <version-maven-antrun-plugin>1.8</version-maven-antrun-plugin>
         <version-maven-assembly-plugin>3.1.0</version-maven-assembly-plugin>
         <version-maven-compiler-plugin>3.1</version-maven-compiler-plugin>
@@ -35,7 +36,7 @@
         <version-maven-surefire-plugin>2.22.0</version-maven-surefire-plugin>
         <version-markdown-plugin>2.1.0</version-markdown-plugin>
     </properties>
-    
+
     <modules>
         <module>jaxrs</module>
         <module>wallet</module>
@@ -175,12 +176,46 @@
                         <licenseName>mit</licenseName>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.ec4j.maven</groupId>
+                    <artifactId>editorconfig-maven-plugin</artifactId>
+                    <version>${version-editorconfig-maven-plugin}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
-    </build>    
-    
+
+        <!-- Plugins -->
+        <plugins>
+            <plugin>
+                <groupId>org.ec4j.maven</groupId>
+                <artifactId>editorconfig-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>velocity.log</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 
     <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>jboss-thirdparty-repository</id>
             <url>https://repository.jboss.org/nexus/service/local/repositories/thirdparty-releases/content/</url>
@@ -189,5 +224,5 @@
             </snapshots>
         </repository>
     </repositories>
-    
+
 </project>

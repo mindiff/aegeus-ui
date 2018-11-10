@@ -3,18 +3,18 @@ package io.aegeus.jaxrs;
 import io.nessus.cipher.CipherSanityCheck;
 
 public class AegeusSanityCheck {
-    
+
     public static void main(String[] args) throws Exception {
 
         verifyPlatform();
     }
 
     public static void verifyPlatform() throws Exception {
-        
+
         verifySLF4J("slf4jA");
-        
+
         verifyJBossLogging("jblogA");
-        
+
         CipherSanityCheck.verifyPlatform();
     }
 

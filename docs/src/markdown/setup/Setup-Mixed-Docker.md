@@ -1,4 +1,4 @@
-## Local setup with mixed services 
+## Local setup with mixed services
 
 This type of installation requires a working [Docker](https://www.docker.com/community-edition#/download) environment.
 
@@ -14,8 +14,8 @@ In total there are four Docker images to make up the complete system.
 3. [aegeus/aegeus-jaxrs](https://hub.docker.com/r/aegeus/aegeus-jaxrs)
 4. [aegeus/aegeus-webui](https://hub.docker.com/r/aegeus/aegeus-webui)
 
-What follows is an installation guide for the last three containers. 
-It is assumed that you already have a local AEG wallet running. 
+What follows is an installation guide for the last three containers.
+It is assumed that you already have a local AEG wallet running.
 
 ### Running the IPFS image
 
@@ -37,7 +37,7 @@ docker run --detach \
 
 ### Running the AEG JAXRS image
 
-This is the JSON-RPC bridge, which contains the Aegeus application logic that connects the Aegeus network with IPFS network. 
+This is the JSON-RPC bridge, which contains the Aegeus application logic that connects the Aegeus network with IPFS network.
 
 #### Bind the Aegeus wallet to an external IP
 
@@ -51,26 +51,26 @@ For this to work, your Aegeus wallet needs to bind to an external IP
     rpcallowip=192.168.178.20
     rpcconnect=192.168.178.20
     rpcport=51473
-    wallet=test-wallet.dat                                                                                                                                                                                                  
- 
+    wallet=test-wallet.dat
+
 Verify that this works
 
     export LOCALIP=192.168.178.20
     curl --data-binary '{"method": "getinfo"}' http://aeg:aegpass@$LOCALIP:51473
-    
+
 Then, verify that this also works from within docker
 
     docker run -it --rm --entrypoint=bash aegeus/aegeus-jaxrs
-    
+
     export LOCALIP=192.168.178.20
     curl --data-binary '{"method": "getinfo"}' http://aeg:aegpass@192.168.178.20:51473
-    
+
 #### Run the AEG JAXRS image
 
 To start the Aegeus bridge in Docker, you can run ...
-    
+
     export LOCALIP=192.168.178.20
-    
+
     docker run --detach \
         -p 8081:8081 \
         --link ipfs:ipfs \
@@ -85,7 +85,7 @@ To start the Aegeus bridge in Docker, you can run ...
 On bootstrap the bridge reports some connection properties.
 
     docker logs jaxrs
-    
+
     AegeusBlockchain: http://aeg:*******@192.168.178.20:51473
     AegeusNetwork Version: 2000000
     IPFS Version: 0.4.16
@@ -96,7 +96,7 @@ On bootstrap the bridge reports some connection properties.
 In this setup the Aegeus UI is optional as well. Still, lets try to connect it to the JSON-RPC bridge and the Aegeus wallet  ...
 
     export LABEL=Mary
-    
+
     docker run --detach \
         -p 8082:8082 \
         --link ipfs:ipfs \
@@ -113,7 +113,7 @@ In this setup the Aegeus UI is optional as well. Still, lets try to connect it t
 Now that everything is running, it should look like this
 
     docker ps
-    
+
     CONTAINER ID        IMAGE                 COMMAND                CREATED             STATUS              PORTS                                                      NAMES
     508d3074fb89        aegeus/aegeus-webui   "aegeus-webui"         4 seconds ago       Up 3 seconds        0.0.0.0:8082->8082/tcp                                     webui
     07cf9212507c        aegeus/aegeus-jaxrs   "aegeus-jaxrs start"   3 minutes ago       Up 3 minutes        0.0.0.0:8081->8081/tcp                                     jaxrs
@@ -122,7 +122,7 @@ Now that everything is running, it should look like this
 The WebUI also reports some connection properties.
 
     docker logs webui
-    
+
     AEG JAXRS: http://172.17.0.3:8081/aegeus
     IPFS Gateway: http://192.168.178.20:8080/ipfs
     AEG WebUI: http://0.0.0.0:8082/portal

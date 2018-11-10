@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/")
 public interface AegeusEndpoint {
-    
+
     @GET
     @Path("/register")
     @Produces(MediaType.TEXT_PLAIN)
@@ -24,7 +24,7 @@ public interface AegeusEndpoint {
     @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     SFHandle add(@QueryParam("addr") String rawAddr, @QueryParam("path") String path, InputStream input) throws IOException, GeneralSecurityException;
-    
+
     @GET
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,12 +49,12 @@ public interface AegeusEndpoint {
     @Path("/findlocal")
     @Produces(MediaType.APPLICATION_JSON)
     List<SFHandle> findLocalContent(@QueryParam("addr") String rawAddr) throws IOException;
-    
+
     @GET
     @Path("/getlocal")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     InputStream getLocalContent(@QueryParam("addr") String rawAddr, @QueryParam("path") String path) throws IOException;
-    
+
     @GET
     @Path("/dellocal")
     @Produces(MediaType.TEXT_PLAIN)

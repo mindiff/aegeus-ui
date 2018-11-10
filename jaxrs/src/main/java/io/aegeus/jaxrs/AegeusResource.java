@@ -23,7 +23,7 @@ import io.nessus.utils.AssertState;
 public class AegeusResource implements AegeusEndpoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(AegeusResource.class);
-    
+
     final ContentManager cntmgr;
 
     public AegeusResource() throws IOException {
@@ -55,7 +55,7 @@ public class AegeusResource implements AegeusEndpoint {
 
         SFHandle shandle = new SFHandle(fhandle);
         LOG.info("/add => {}", shandle);
-        
+
         return shandle;
     }
 
@@ -70,7 +70,7 @@ public class AegeusResource implements AegeusEndpoint {
 
         SFHandle shandle = new SFHandle(fhandle);
         LOG.info("/get => {}", shandle);
-        
+
         return shandle;
     }
 
@@ -85,7 +85,7 @@ public class AegeusResource implements AegeusEndpoint {
 
         SFHandle shandle = new SFHandle(fhandle);
         LOG.info("/send => {}", shandle);
-        
+
         return shandle;
     }
 
@@ -94,10 +94,10 @@ public class AegeusResource implements AegeusEndpoint {
 
         Address addr = assertWalletAddress(rawAddr);
         PublicKey pubKey = cntmgr.findRegistation(addr);
-        
+
         String encKey = pubKey != null ? Base64.getEncoder().encodeToString(pubKey.getEncoded()) : null;
         LOG.info("/findkey => {}", encKey);
-        
+
         return encKey;
     }
 
@@ -135,7 +135,7 @@ public class AegeusResource implements AegeusEndpoint {
         Address owner = assertWalletAddress(rawAddr);
         InputStream content = cntmgr.getLocalContent(owner, Paths.get(path));
         LOG.info("/getlocal => {}", content);
-        
+
         return content;
     }
 
@@ -145,7 +145,7 @@ public class AegeusResource implements AegeusEndpoint {
         Address owner = assertWalletAddress(rawAddr);
         boolean deleted = cntmgr.deleteLocalContent(owner, Paths.get(path));
         LOG.info("/dellocal => {}", deleted);
-        
+
         return deleted;
     }
 

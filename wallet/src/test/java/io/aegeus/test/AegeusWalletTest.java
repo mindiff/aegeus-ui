@@ -12,10 +12,10 @@ package io.aegeus.test;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -47,7 +47,7 @@ public class AegeusWalletTest extends AbstractAegeusTest {
     public void testRawTx () throws Exception {
 
         showAccountBalances();
-        
+
         // Verify that Bob has some funds
         BigDecimal balBob = wallet.getBalance(addrBob);
         Assert.assertTrue(BigDecimal.ZERO.compareTo(balBob) < 0);
@@ -56,7 +56,7 @@ public class AegeusWalletTest extends AbstractAegeusTest {
         BigDecimal dataAmount = dustAmount.multiply(BigDecimal.TEN);
         BigDecimal dataFee = network.getMinDataAmount();
         BigDecimal spendAmount = dataAmount.add(dataFee);
-        
+
         List<UTXO> utxos = wallet.selectUnspent(LABEL_BOB, addFee(spendAmount));
         BigDecimal utxosAmount = getUTXOAmount(utxos);
 
@@ -64,7 +64,7 @@ public class AegeusWalletTest extends AbstractAegeusTest {
         BigDecimal changeAmount = utxosAmount.subtract(addFee(spendAmount));
 
         byte[] dataIn = "IPFS".getBytes();
-        
+
         TxBuilder builder = new TxBuilder().unspentInputs(utxos);
         if (dustAmount.compareTo(changeAmount) < 0) {
             builder.output(new TxOutput(changeAddr.getAddress(), changeAmount));
@@ -74,12 +74,12 @@ public class AegeusWalletTest extends AbstractAegeusTest {
                 .build();
 
         String txId = wallet.sendTx(tx);
-        
+
         LOG.info("Tx: {}", txId);
-        
+
         // Show account balances
         showAccountBalances();
-        
+
         // Verify that OP_RETURN data has been recorded
         tx = wallet.getTransaction(txId);
         List<TxOutput> outputs = tx.outputs();
@@ -98,7 +98,7 @@ public class AegeusWalletTest extends AbstractAegeusTest {
         Assert.assertEquals(dataIn.length + 2, dataOut.length);
         Assert.assertArrayEquals(dataIn, Arrays.copyOfRange(dataOut, 2, dataOut.length));
     }
-    
+
     @Test
     public void testAmount () throws Exception {
 
@@ -107,10 +107,10 @@ public class AegeusWalletTest extends AbstractAegeusTest {
 
         BigDecimal val = wallet.fromSatoshiHex(hex);
         Assert.assertEquals(new BigDecimal("0.01"), val);
-        
+
         byte[] bytes = HexCoder.decode(hex.substring(2));
         Assert.assertEquals(8, bytes.length);
-        
+
         hex = HexCoder.encode(reverse(bytes));
         Assert.assertEquals("40420f0000000000", hex);
     }

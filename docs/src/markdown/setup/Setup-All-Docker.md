@@ -1,4 +1,4 @@
-## Setup with Docker services 
+## Setup with Docker services
 
 This type of installation requires a working [Docker](https://www.docker.com/community-edition#/download) environment.
 
@@ -15,7 +15,7 @@ In total there are four Docker images to make up the complete system.
 4. [aegeus/aegeus-webui](https://hub.docker.com/r/aegeus/aegeus-webui)
 
 What follows is an installation guide for all four containers. However, if you already have IPFS and AEG running locally, you will not need to run these in Docker again.
-For a mixed setup with already running IPFS & AEG service and newly hosted Docker services go [here](docker/setup/Setup-Mixed-Docker.md). 
+For a mixed setup with already running IPFS & AEG service and newly hosted Docker services go [here](docker/setup/Setup-Mixed-Docker.md).
 
 For convenience however, lets do the whole setup in Docker first.
 
@@ -38,7 +38,7 @@ It'll take a little while for the network to sync. You can watch progress like t
 To start the Aegeus IPFS daemon in Docker, you can run ...
 
     export GATEWAYIP=185.92.221.103
-    
+
     docker run --detach \
         -p 4001:4001 \
         -p 8080:8080 \
@@ -51,7 +51,7 @@ In case you need to connect the IPFS swarm to this instance, you can get the net
 
     export GATEWAYIP=185.92.221.103
     echo "ipfs swarm connect /ip4/$GATEWAYIP/tcp/4001/ipfs/`docker exec ipfs ipfs config Identity.PeerID`"
-    
+
 and then on some other IPFS instance connect to the Aegeus IPFS daemon like this ...
 
     ipfs swarm connect /ip4/185.92.221.103/tcp/4001/ipfs/QmabAtE8qXJKDJ3SnxX18ZfEg9xMKdqoiA3KhW58hi4pmL
@@ -59,14 +59,14 @@ and then on some other IPFS instance connect to the Aegeus IPFS daemon like this
 You can always get the system out for a running service like this ...
 
     docker logs ipfs
-    
+
     initializing IPFS node at /root/.ipfs
     generating 2048-bit RSA keypair...done
     peer identity: QmabAtE8qXJKDJ3SnxX18ZfEg9xMKdqoiA3KhW58hi4pmL
     to get started, enter:
-    
+
         ipfs cat /ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme
-    
+
     Initializing daemon...
     Swarm listening on /ip4/127.0.0.1/tcp/4001
     Swarm listening on /ip4/172.17.0.2/tcp/4001
@@ -79,7 +79,7 @@ You can always get the system out for a running service like this ...
 
 ### Running the AEG JAXRS image
 
-This is the Aegeus JSON-RPC bridge, which contains the Aegeus application logic that connects the Aegeus network with IPFS network. 
+This is the Aegeus JSON-RPC bridge, which contains the Aegeus application logic that connects the Aegeus network with IPFS network.
 
 To start the Aegeus bridge in Docker, you can run ...
 
@@ -94,7 +94,7 @@ To start the Aegeus bridge in Docker, you can run ...
 On bootstrap the bridge reports some connection properties.
 
     docker logs jaxrs
-    
+
     AegeusBlockchain: http://aeg:*******@172.17.0.3:51473
     AegeusNetwork Version: 2000400
     IPFS Version: 0.4.18
@@ -103,74 +103,74 @@ On bootstrap the bridge reports some connection properties.
 Now, lets have a look at the available JSON-RPC methods
 
     docker exec jaxrs aegeus-jaxrs --help
-    
+
     Aegeus JAXRS
     ============
-     
+
     Commandline Options
     -------------------
-     
+
     * aegeus-jaxrpc start - Starts the JAXRS server
     * aegeus-jaxrpc stop  - Stops the JAXRS server
-     
+
     REST API
     --------
-     
+
         @GET
         @Path("/register")
         @Produces(MediaType.TEXT_PLAIN)
         String register(@QueryParam("addr") String rawAddr)
-     
+
         @POST
         @Path("/add")
         @Produces(MediaType.APPLICATION_JSON)
         SFHandle add(@QueryParam("addr") String rawAddr, @QueryParam("path") String path, InputStream input)
-         
+
         @GET
         @Path("/get")
         @Produces(MediaType.APPLICATION_JSON)
         SFHandle get(@QueryParam("addr") String rawAddr, @QueryParam("cid") String cid, @QueryParam("path") String path, @QueryParam("timeout") Long timeout)
-     
+
         @GET
         @Path("/send")
         @Produces(MediaType.APPLICATION_JSON)
         SFHandle send(@QueryParam("addr") String rawAddr, @QueryParam("cid") String cid, @QueryParam("target") String rawTarget, @QueryParam("timeout") Long timeout)
-     
+
         @GET
         @Path("/findkey")
         @Produces(MediaType.APPLICATION_JSON)
         String findRegistation(@QueryParam("addr") String rawAddr)
-     
+
         @GET
         @Path("/findipfs")
         @Produces(MediaType.APPLICATION_JSON)
         List<SFHandle> findIPFSContent(@QueryParam("addr") String rawAddr, @QueryParam("timeout") Long timeout)
-     
+
         @GET
         @Path("/findlocal")
         @Produces(MediaType.APPLICATION_JSON)
         List<SFHandle> findLocalContent(@QueryParam("addr") String rawAddr)
-         
+
         @GET
         @Path("/getlocal")
         @Produces(MediaType.APPLICATION_OCTET_STREAM)
         InputStream getLocalContent(@QueryParam("addr") String rawAddr, @QueryParam("path") String path)
-         
+
         @GET
         @Path("/dellocal")
         @Produces(MediaType.TEXT_PLAIN)
         boolean deleteLocalContent(@QueryParam("addr") String rawAddr, @QueryParam("path") String path)
 
-Before we connect to the bridge directly, lets first take look at the WebUI and do some inital setup. 
+Before we connect to the bridge directly, lets first take look at the WebUI and do some inital setup.
 
 ### Running the AEG WebUI image
 
-This is a prototype of the Aegeus UI. 
+This is a prototype of the Aegeus UI.
 
 To start up the Aegeus UI in Docker, you can run ...
-    
+
     export LABEL=Bob
-    
+
     docker run --detach \
         -p 8082:8082 \
         --link aegd:aeg \
@@ -184,7 +184,7 @@ To start up the Aegeus UI in Docker, you can run ...
 Now that everything is running, it should look like this
 
     docker ps
-    
+
     CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                      NAMES
     ef410d403355        aegeus/aegeus-webui   "aegeus-webui"           4 seconds ago       Up 3 seconds        0.0.0.0:8082->8082/tcp                                     webui
     5298b8ae05e5        aegeus/aegeus-jaxrs   "aegeus-jaxrs start"     5 seconds ago       Up 4 seconds        0.0.0.0:8081->8081/tcp                                     jaxrs
@@ -194,7 +194,7 @@ Now that everything is running, it should look like this
 The WebUI also reports some connection properties.
 
     docker logs webui
-    
+
     AEG JAXRS: http://172.17.0.4:8081/aegeus
     IPFS Gateway: http://172.17.0.2:8080/ipfs
     AEG WebUI: http://0.0.0.0:8082/portal
@@ -211,28 +211,28 @@ First, lets import a known AEG private key, so that Bob get some funds. This wil
 
     docker exec aeg aegeus-cli importprivkey "PRPS5pH***********************" Bob
 
-On success, there is no feedback from this command. 
+On success, there is no feedback from this command.
 When you again look at the WebUI, you should see that Bob's address is now assigned to an account and that he has some funds.
 
 Next, lets register Bob's address with the system by making a JSON-RPC call to the bridge.
 
     curl http://127.0.0.1:8081/aegeus/register?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX
-    
+
     MDYwEAYHKoZIzj0CAQYFK4EEABwDIgAEP2ru5CB0CMyGX4sp8hz5qVn4eKgSo8NpToww2bAksZg=
 
-This is Bob's public key used for IPFS file encryption. 
+This is Bob's public key used for IPFS file encryption.
 
 Lets see, if we can also retrieve it from the blockchain.
 
     curl http://127.0.0.1:8081/aegeus/findkey?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX
-    
+
     MDYwEAYHKoZIzj0CAQYFK4EEABwDIgAEP2ru5CB0CMyGX4sp8hz5qVn4eKgSo8NpToww2bAksZg=
 
 Now, lets add this document to the system.
 
     echo "Hello World" > test.txt
     curl --request POST --data @test.txt http://127.0.0.1:8081/aegeus/add?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX\&path=test.txt
-    
+
     {
         "owner":"AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX",
         "path":"test.txt",
@@ -245,7 +245,7 @@ Again, this should be reflected in the WebUI.
 Connecting to the IPFS gateway direcly, we should be able to see the file content.
 
     curl http://127.0.0.1:8080/ipfs/QmWjYT1TunvTPTRrAE3nVTLExV4e72EVpwS9JaqbH6ba59
-    
+
     AEG-Version: 1.0
     Path: test.txt
     Owner: AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX
@@ -256,7 +256,7 @@ Connecting to the IPFS gateway direcly, we should be able to see the file conten
 Like above with the public encryption key, we should be able to find this IPFS content id on the blockhain.
 
     curl http://127.0.0.1:8081/aegeus/findipfs?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX
-    
+
     {
         "owner":"AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX",
         "path":"test.txt",
@@ -267,7 +267,7 @@ Like above with the public encryption key, we should be able to find this IPFS c
 The local unencrypted content is also available after the IPFS add.
 
     curl http://127.0.0.1:8081/aegeus/findlocal?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX
-    
+
     {
         "owner":"AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX",
         "path":"test.txt",
@@ -279,13 +279,13 @@ Lets delete that local file.
 
     curl http://127.0.0.1:8081/aegeus/dellocal?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX\&path=test.txt
     curl http://127.0.0.1:8081/aegeus/findlocal?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX
-    
+
     []
 
 Lets assume at a later time, we would like to get that file from IPFS
- 
+
     curl http://127.0.0.1:8081/aegeus/get?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX\&path=other.txt\&cid=QmWjYT1TunvTPTRrAE3nVTLExV4e72EVpwS9JaqbH6ba59
-    
+
     {
         "owner":"AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX",
         "path":"other.txt",
@@ -296,7 +296,7 @@ Lets assume at a later time, we would like to get that file from IPFS
 Finally, lets get the unencrypted content back
 
     curl http://127.0.0.1:8081/aegeus/getlocal?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX\&path=other.txt
-    
+
     Hello World
 
 That's it - Enjoy!

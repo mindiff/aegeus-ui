@@ -17,20 +17,20 @@ public abstract class AbstractAegeusTest extends AbstractBlockchainTest {
 
     protected static Address addrBob;
     protected static Address addrMary;
-    
+
     @BeforeClass
     public static void beforeAegeusTest() throws Exception {
-        
+
         blockchain = (AegeusBlockchain) BlockchainFactory.getBlockchain(AegeusBlockchain.getAegeusConf(), AegeusBlockchain.class);
         network = (AegeusNetwork) blockchain.getNetwork();
         wallet = (AegeusWallet) blockchain.getWallet();
-        
+
         importAddresses(wallet, AbstractAegeusTest.class);
-        
+
         addrBob = wallet.getAddress(LABEL_BOB);
         addrMary = wallet.getAddress(LABEL_MARY);
     }
-    
+
     @AfterClass
     public static void afterAegeusTest() throws Exception {
 

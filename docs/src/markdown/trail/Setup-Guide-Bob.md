@@ -1,12 +1,12 @@
 
 ## Setup Guide for Bob
 
-The steps to get the demo running on your box are trivial. It assumes that you already have [Docker](https://www.docker.com/community-edition) running. 
-If not, there is guide on how to setup a VPS that has Docker support [here](../setup/Setup-VPS-Docker.md). These steps would however equally work on your Mac or Windows box. 
- 
-### Quickstart 
+The steps to get the demo running on your box are trivial. It assumes that you already have [Docker](https://www.docker.com/community-edition) running.
+If not, there is guide on how to setup a VPS that has Docker support [here](../setup/Setup-VPS-Docker.md). These steps would however equally work on your Mac or Windows box.
 
-In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ... 
+### Quickstart
+
+In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ...
 
     docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
     docker run --detach --name ipfs -p 4001:4001 -p 8080:8080 --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
@@ -50,7 +50,7 @@ In the steps below, you would have to replace `185.92.221.103` with the external
         --memory=200m --memory-swap=2g \
         --name jaxrs \
         aegeus/aegeus-jaxrs
-    
+
     watch docker logs jaxrs
 
 ### Running the AEG WebUI image
@@ -64,7 +64,7 @@ In the steps below, you would have to replace `185.92.221.103` with the external
         --memory=200m --memory-swap=2g \
         --name webui \
         aegeus/aegeus-webui
-    
+
     watch docker logs webui
 
 ### Setup for Mary (optional)

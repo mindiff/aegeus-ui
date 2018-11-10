@@ -7,7 +7,7 @@
         <artifactId>aegeus</artifactId>
         <version>1.0.0.Alpha5-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>aegeus-wallet</artifactId>
 
     <name>Aegeus :: Wallet</name>
@@ -17,14 +17,14 @@
             <groupId>io.nessus</groupId>
             <artifactId>nessus-bitcoin</artifactId>
         </dependency>
-        
+
         <!-- Provided -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- Test -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -32,5 +32,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
 </project>

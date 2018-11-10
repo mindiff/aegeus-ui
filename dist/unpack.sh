@@ -10,7 +10,7 @@ HOMEDIR=`cd $HOMEDIR; pwd`
 cd $CURDIR
 
 cd $HOMEDIR/target
-for f in `ls *.tgz`; 
+for f in `ls *.tgz`;
 do
     echo $f
     tar xzf $f

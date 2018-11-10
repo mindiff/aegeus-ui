@@ -12,10 +12,10 @@ package io.aegeus.jaxrs;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,10 +30,10 @@ public class Constants {
 
     public static final String AEG_PREFIX = "AEG";
     public static final String AEG_VERSION = "1.0";
-    
+
     public static final String ENV_JAXRS_HOST = "AEG_JAXRS_HOST";
     public static final String ENV_JAXRS_PORT = "AEG_JAXRS_PORT";
-    
+
     public static final String ENV_WEBUI_EXTIP = "AEG_WEBUI_EXTIP";
     public static final String ENV_WEBUI_HOST = "AEG_WEBUI_HOST";
     public static final String ENV_WEBUI_PORT = "AEG_WEBUI_PORT";

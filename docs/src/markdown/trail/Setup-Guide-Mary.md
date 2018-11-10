@@ -1,11 +1,11 @@
 
 ## Setup the AEG Demo for Mary
 
-The AEG demo requires a working [Docker](https://www.docker.com/community-edition) environment. 
+The AEG demo requires a working [Docker](https://www.docker.com/community-edition) environment.
 
-### Quickstart 
+### Quickstart
 
-In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ... 
+In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ...
 
     docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
     docker run --detach --name ipfs -p 4001:4001 -p 8080:8080 --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
@@ -49,7 +49,7 @@ In the steps below, you would have to replace `167.99.32.85` with the external I
         --memory=200m --memory-swap=2g \
         --name jaxrs \
         aegeus/aegeus-jaxrs
-    
+
     watch docker logs jaxrs
 
 ### Running the AEG WebUI image
@@ -63,6 +63,5 @@ In the steps below, you would have to replace `167.99.32.85` with the external I
         --memory=200m --memory-swap=2g \
         --name webui \
         aegeus/aegeus-webui
-    
+
     watch docker logs webui
-  

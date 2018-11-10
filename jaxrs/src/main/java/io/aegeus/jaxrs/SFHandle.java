@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import io.nessus.ipfs.FHandle;
 
 public class SFHandle {
-    
+
     private String cid;
     private String owner;
     private String path;
@@ -15,10 +15,10 @@ public class SFHandle {
     private boolean expired;
     private int attempts;
     private Long elapsed;
-    
+
     public SFHandle() {
     }
-    
+
     public SFHandle(String cid, String owner, String path, boolean available, boolean encrypted) {
         this.cid = cid;
         this.owner = owner;
@@ -39,7 +39,7 @@ public class SFHandle {
         this.attempts = fhandle.getAttempt();
         this.elapsed = fhandle.getElapsed();
     }
-    
+
     public String getCid() {
         return cid;
     }
@@ -113,7 +113,7 @@ public class SFHandle {
     }
 
     public String toString() {
-        return String.format("[cid=%s, owner=%s, path=%s, avl=%b, exp=%b, try=%d, time=%s]", 
+        return String.format("[cid=%s, owner=%s, path=%s, avl=%b, exp=%b, try=%d, time=%s]",
                 cid, owner, path, available, expired, attempts, elapsed);
     }
 }
