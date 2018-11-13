@@ -2,8 +2,6 @@
 
 ### Build the IPFS image
 
-This is largly inspired by [Run IPFS latest on a VPS](https://ipfs.io/blog/22-run-ipfs-on-a-vps/).
-
 ```
 export NVERSION=0.4.18
 

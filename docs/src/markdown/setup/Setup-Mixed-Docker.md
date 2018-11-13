@@ -97,7 +97,7 @@ On bootstrap the bridge reports some connection properties.
 
 In this setup the Aegeus UI is optional as well. Still, lets try to connect it to the JSON-RPC bridge and the Aegeus wallet  ...
 
-    export LABEL=Bob
+    export LABEL=Mary
 
     docker run --detach \
         -p 8082:8082 \

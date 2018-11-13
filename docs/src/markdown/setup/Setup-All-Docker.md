@@ -19,6 +19,19 @@ For a mixed setup with already running IPFS & AEG service and newly hosted Docke
 
 For convenience however, lets do the whole setup in Docker first.
 
+### Quickstart
+
+Here is the quickstart to get the whole system running in no time ...
+
+    export GATEWAYIP=185.92.221.103
+
+    docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd:3.0-dev
+    docker run --detach --name ipfs -p 4001:4001 -p 8080:8080 -e GATEWAYIP=$GATEWAYIP --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
+    docker run --detach --name jaxrs -p 8081:8081 --link aegd:aeg --link ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs
+    docker run --detach --name webui -p 8082:8082 --link aegd:aeg --link ipfs:ipfs --link jaxrs:jaxrs --memory=200m --memory-swap=2g --env AEG_WEBUI_LABEL=Bob aegeus/aegeus-webui
+
+You should now be able to access the WebUI at: [http://127.0.0.1:8082/portal](http://127.0.0.1:8082/portal)
+
 ### Running the Aegeus daemon
 
 To start the Aegeus daemon in Docker, you can run ...
