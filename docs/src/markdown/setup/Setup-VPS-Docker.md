@@ -19,7 +19,7 @@ timedatectl set-timezone Europe/Amsterdam
 timedatectl
 
 export NUSER=aeg
-useradd -G root -m $NUSER -s /bin/bash
+useradd -G root,wheel -m $NUSER -s /bin/bash
 cp -r .ssh /home/$NUSER/
 chown -R $NUSER.$NUSER /home/$NUSER/.ssh
 

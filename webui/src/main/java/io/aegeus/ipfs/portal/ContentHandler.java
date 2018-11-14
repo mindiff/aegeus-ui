@@ -301,11 +301,11 @@ public class ContentHandler implements HttpHandler {
             public void run() {
 
                 if (key.startsWith("A")) {
-                    LOG.info("Adding watch only address: {}", key);
-                    wallet.addAddress(key, Arrays.asList(label));
+                    LOG.info("Importing watch only address: {}", key);
+                    wallet.importAddress(key, Arrays.asList(label));
                 } else if (key.startsWith("P")) {
-                    LOG.info("Adding private key: P**************");
-                    wallet.addPrivateKey(key, Arrays.asList(label));
+                    LOG.info("Importing private key: P**************");
+                    wallet.importPrivateKey(key, Arrays.asList(label));
                 }
             }
         }).start();
@@ -401,13 +401,7 @@ public class ContentHandler implements HttpHandler {
         List<AddressDTO> addrs = new ArrayList<>();
 
         for (Address addr : getAddressWithLabel()) {
-            BigDecimal balance;
-            if (!addr.getLabels().isEmpty()) {
-                String label = addr.getLabels().get(0);
-                balance = wallet.getBalance(label);
-            } else {
-                balance = wallet.getBalance(addr);
-            }
+            BigDecimal balance = wallet.getBalance(addr);
             String pubKey = client.findRegistation(addr.getAddress());
             addrs.add(new AddressDTO(addr, balance, pubKey != null));
         }

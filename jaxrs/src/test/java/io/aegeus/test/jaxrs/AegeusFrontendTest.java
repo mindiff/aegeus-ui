@@ -32,6 +32,8 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
 
+        AbstractAegeusTest.beforeClass();
+
         server = AegeusApplication.serverStart();
 
         int port = server.getAegeusConfig().getPort();
@@ -146,14 +148,6 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
         Assert.assertFalse(fhandle.isEncrypted());
         Assert.assertNull(fhandle.getCid());
 
-        try {
-            Address addrDummy = wallet.getAddress("Dummy");
-            client.get(addrDummy.getAddress(), cid, relPath.toString(), timeout);
-            Assert.fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException ex) {
-            Assert.assertTrue(ex.getMessage().startsWith("Wallet does not control private key"));
-        }
-
         // Send content from IPFS
 
         fhandle = client.send(addrBob.getAddress(), cid, addrMary.getAddress(), timeout);
@@ -190,13 +184,7 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
         List<SFHandle> fhandles = client.findIPFSContent(addr.getAddress(), timeout);
         SFHandle fhandle  = fhandles.stream().filter(fh -> fh.getCid().equals(cid)).findFirst().get();
         Assert.assertNotNull(fhandle);
-        Assert.assertFalse(fhandle.isAvailable());
-
-        for (int i = 0; i < 4 && !fhandle.isAvailable(); i++) {
-            Thread.sleep(1000);
-            fhandles = client.findIPFSContent(addr.getAddress(), timeout);
-            fhandle  = fhandles.stream().filter(fh -> fh.getCid().equals(cid)).findFirst().get();
-        }
+        Assert.assertTrue(fhandle.isAvailable());
 
         return fhandle;
     }

@@ -4,7 +4,7 @@
 rm -rf docker
 mkdir -p docker
 
-export NVERSION=1.0.0.Alpha4
+export NVERSION=1.0.0.Alpha5-SNAPSHOT
 
 tar xzf aegeus-dist-$NVERSION-deps.tgz -C docker
 tar xzf aegeus-dist-$NVERSION-proj.tgz -C docker
@@ -22,13 +22,12 @@ CMD ["start"]
 ENTRYPOINT ["aegeus-jaxrs"]
 EOF
 
-docker rmi -f aegeus/aegeus-jaxrs
 docker build -t aegeus/aegeus-jaxrs docker/
 
+export TAGNAME=1.0.0.Alpha5-dev
+docker tag aegeus/aegeus-jaxrs aegeus/aegeus-jaxrs:$TAGNAME
+docker push aegeus/aegeus-jaxrs:$TAGNAME
 docker push aegeus/aegeus-jaxrs
-
-docker tag aegeus/aegeus-jaxrs aegeus/aegeus-jaxrs:$NVERSION
-docker push aegeus/aegeus-jaxrs:$NVERSION
 ```
 
 ### Run the AEG JAXRS image
@@ -44,11 +43,13 @@ docker run --detach \
     --memory=200m --memory-swap=2g \
     --name $NAME \
     aegeus/aegeus-jaxrs
-    
-docker exec -it $NAME tail -f -n 100 debug.log
 
-watch docker logs $NAME
+# Follow the info log
+docker logs -f jaxrs
 
-docker exec $NAME aegeus-jaxrs --help
-docker exec -it $NAME tail -f -n 100 debug.log
+# Follow the info log on the journal
+journalctl CONTAINER_NAME=jaxrs -f
+
+# Follow the debug log
+docker exec -it jaxrs tail -f -n 100 debug.log
 ```

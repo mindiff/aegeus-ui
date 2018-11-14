@@ -28,7 +28,7 @@ public abstract class AbstractAegeusTest extends AbstractBlockchainTest {
     protected static Address addrMary;
 
     @BeforeClass
-    public static void beforeAegeusTest() throws Exception {
+    public static void beforeClass() throws Exception {
 
         blockchain = (AegeusBlockchain) BlockchainFactory.getBlockchain(AegeusBlockchain.getAegeusConf(), AegeusBlockchain.class);
         network = (AegeusNetwork) blockchain.getNetwork();

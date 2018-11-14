@@ -4,7 +4,7 @@
 rm -rf docker
 mkdir -p docker
 
-export NVERSION=1.0.0.Alpha4
+export NVERSION=1.0.0.Alpha5-SNAPSHOT
 
 tar xzf aegeus-dist-$NVERSION-deps.tgz -C docker
 tar xzf aegeus-dist-$NVERSION-proj.tgz -C docker
@@ -21,20 +21,19 @@ RUN ln -s /aegeus-webui/bin/run-aegeus-webui.sh /usr/local/bin/aegeus-webui
 ENTRYPOINT ["aegeus-webui"]
 EOF
 
-docker rmi -f aegeus/aegeus-webui
 docker build -t aegeus/aegeus-webui docker/
 
+export TAGNAME=1.0.0.Alpha5-dev
+docker tag aegeus/aegeus-webui aegeus/aegeus-webui:$TAGNAME
+docker push aegeus/aegeus-webui:$TAGNAME
 docker push aegeus/aegeus-webui
-
-docker tag aegeus/aegeus-webui aegeus/aegeus-webui:$NVERSION
-docker push aegeus/aegeus-webui:$NVERSION
 ```
 
 Run the AEG WebUI
 
 ```
-export LABEL=Bob
 export NAME=webui
+export LABEL=Bob
 
 docker rm -f $NAME
 docker run --detach \
@@ -47,7 +46,5 @@ docker run --detach \
     --name $NAME \
     aegeus/aegeus-webui
     
-watch docker logs $NAME
-
-docker exec -it $NAME tail -f -n 100 debug.log
+watch docker logs webui
 ```
