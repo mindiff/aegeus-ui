@@ -8,8 +8,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -34,7 +36,6 @@ import io.nessus.Network;
 import io.nessus.Wallet;
 import io.nessus.Wallet.Address;
 import io.nessus.utils.StreamUtils;
-import io.nessus.utils.SystemUtils;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.RedirectHandler;
@@ -96,6 +97,10 @@ public class ContentHandler implements HttpHandler {
 
         String tmplPath = null;
         VelocityContext context = new VelocityContext();
+        long walletVersion = network.getNetworkInfo().version();
+        long protocolVersion = network.getNetworkInfo().protocolVersion();
+        context.put("walletVersion", walletVersion);
+        context.put("protocolVersion", protocolVersion);
 
         // Action add text
 
@@ -176,7 +181,7 @@ public class ContentHandler implements HttpHandler {
 
         // Page file list
 
-        else if (relPath.startsWith("/portal/plist")) {
+        else if (relPath.startsWith("/portal/files")) {
 
             tmplPath = pageFileList(exchange, context);
         }
@@ -186,6 +191,16 @@ public class ContentHandler implements HttpHandler {
         else if (relPath.startsWith("/portal/psend")) {
 
             tmplPath = pageSend(exchange, context);
+        }
+
+        // Address List
+
+        else if (relPath.startsWith("/portal/addresses")) {
+            tmplPath = pageAddressList(exchange, context);
+        }
+
+        else if ( relPath.startsWith("/portal/balance") ) {
+            tmplPath = pageGetBalance(exchange, context);
         }
 
         // Home page
@@ -220,7 +235,7 @@ public class ContentHandler implements HttpHandler {
         Address addr = wallet.findAddress(rawAddr);
         addr.setLabels(Arrays.asList(label));
 
-        redirectHomePage(exchange);
+        redirectAddressPage(exchange);
     }
 
     private void actAddText(HttpServerExchange exchange, VelocityContext context) throws Exception {
@@ -240,11 +255,48 @@ public class ContentHandler implements HttpHandler {
         Map<String, Deque<String>> qparams = exchange.getQueryParameters();
         String rawAddr = qparams.get("addr").getFirst();
         String relPath = qparams.get("path").getFirst();
-        URL furl = new URL(qparams.get("url").getFirst());
+        String url = qparams.get("url").getFirst();
+        URL furl = null;
+	int[] acceptableHttpCodes = new int[]{200,302,304};
+	int remoteFileSize = 0;
 
-        client.add(rawAddr, relPath, furl.openStream());
+        try {
+            furl = new URL(url);
 
-        redirectFileList(exchange, rawAddr);
+            URLConnection conn = furl.openConnection();
+	    conn.connect();
+
+	    if ( conn instanceof HttpURLConnection) {
+   	        HttpURLConnection httpConnection = (HttpURLConnection) conn;
+            	remoteFileSize = conn.getContentLength();
+		int respCode = httpConnection.getResponseCode();
+		boolean foundValidCode = Arrays.stream(acceptableHttpCodes).anyMatch(x->x == respCode);
+
+		if (!foundValidCode) {
+            	    new RedirectHandler("/portal/files?addr=" + rawAddr + "&error=Error Fetching Content (" + url + ")#pills-url").handleRequest(exchange);
+		} else {
+		    String binaryIdentifier = "application/octet-stream";
+		    String remoteContentType = httpConnection.getContentType();
+		    boolean isBinaryData = remoteContentType.equals(binaryIdentifier);
+
+		    // We are not allowing binary data for this initial release, but will be included in the upcoming releases.
+		    if (isBinaryData) {
+                        new RedirectHandler("/portal/files?addr=" + rawAddr + "&error=Remote file is binary and not supported currently (" + url + ")#pills-url").handleRequest(exchange);
+	  	    }
+
+		    if (remoteFileSize >= 1000000) {
+            	        new RedirectHandler("/portal/files?addr=" + rawAddr + "&error=Remote file size exceeds maximum of 1MB (" + url + ")#pills-url").handleRequest(exchange);
+ 		    } else {
+        		client.add(rawAddr, relPath, furl.openStream());
+        		redirectFileList(exchange, rawAddr);
+		    }
+	        }
+	    }
+        } catch(NullPointerException e) {
+            new RedirectHandler("/portal/files?addr=" + rawAddr + "&error=No content found at this address. (" + url + ")#pills-url").handleRequest(exchange);
+        } catch(Exception e) {
+            new RedirectHandler("/portal/files?addr=" + rawAddr + "&error=Unknown host. (" + url + ")#pills-url").handleRequest(exchange);
+        }
     }
 
     private void actRegisterAddress(HttpServerExchange exchange, VelocityContext context) throws Exception {
@@ -264,7 +316,7 @@ public class ContentHandler implements HttpHandler {
 
         wallet.newAddress(label);
 
-        redirectHomePage(exchange);
+        redirectAddressPage(exchange);
     }
 
     private void actFileDel(HttpServerExchange exchange, VelocityContext context) throws Exception {
@@ -320,7 +372,11 @@ public class ContentHandler implements HttpHandler {
         String rawToAddr = qparams.get("toaddr").getFirst();
         String cid = qparams.get("cid").getFirst();
 
-        client.send(rawFromAddr, cid, rawToAddr, 10000L);
+        try {
+            client.send(rawFromAddr, cid, rawToAddr, 10000L);
+        } catch(IllegalArgumentException e) {
+            new RedirectHandler("/portal/files?addr=" + rawFromAddr + "&error=" + e.getMessage() + "!").handleRequest(exchange);
+        }
 
         redirectHomePage(exchange);
     }
@@ -355,16 +411,52 @@ public class ContentHandler implements HttpHandler {
     private String pageFileList(HttpServerExchange exchange, VelocityContext context) throws Exception {
 
         Map<String, Deque<String>> qparams = exchange.getQueryParameters();
-        String rawAddr = qparams.get("addr").getFirst();
 
-        Address addr = wallet.findAddress(rawAddr);
-        String pubKey = client.findRegistation(rawAddr);
+        // Initializing String variable with null value
+        String rawAddr = null;
+        Address addr = null;
+        String pubKey = null;
+        String error = null;
+
+        try {
+            error = qparams.get("error").getFirst();
+        } catch(NullPointerException e) { }
+
+        try {
+            rawAddr = qparams.get("addr").getFirst();
+        } catch(NullPointerException e) {
+            new RedirectHandler("/portal/addresses?error=No+address+found!").handleRequest(exchange);
+        }
+
+        try {
+            addr = wallet.findAddress(rawAddr);
+            pubKey = client.findRegistation(rawAddr);
+        } catch (IllegalStateException e) {
+            new RedirectHandler("/portal/addresses?error=" + e.getMessage() + "!").handleRequest(exchange);
+        }
+
         AddressDTO paddr = portalAddress(addr, pubKey != null);
         context.put("addr", paddr);
 
         List<SFHandle> fhandles = new ArrayList<>(client.findIPFSContent(rawAddr, 10000L));
         fhandles.addAll(client.findLocalContent(rawAddr));
 
+        List<AddressDTO> addrs = new ArrayList<>();
+
+        for (Address address : getAddressWithLabel()) {
+            BigDecimal balance;
+            if (!address.getLabels().isEmpty()) {
+                String label = address.getLabels().get(0);
+                balance = wallet.getBalance(label);
+            } else {
+                balance = wallet.getBalance(address);
+            }
+            String addrPubKey = client.findRegistation(address.getAddress());
+            addrs.add(new AddressDTO(address, balance, addrPubKey != null));
+        }
+
+        context.put("error", error);
+        context.put("addrs", addrs);
         context.put("files", fhandles);
         context.put("gatewayUrl", gatewayURI);
 
@@ -396,26 +488,103 @@ public class ContentHandler implements HttpHandler {
         return "templates/portal-send.vm";
     }
 
+    private String pageGetBalance(HttpServerExchange exchange, VelocityContext context) throws Exception {
+        Map<String, Deque<String>> qparams = exchange.getQueryParameters();
+        String qryAddr = null;
+
+        qryAddr = qparams.get("addr").getFirst();
+
+        List<AddressDTO> addrs = new ArrayList<>();
+
+        for (Address addr : getAddressWithLabel()) {
+            BigDecimal balance;
+            if (!addr.getLabels().isEmpty()) {
+                String label = addr.getLabels().get(0);
+                balance = wallet.getBalance(label);
+            } else {
+                balance = wallet.getBalance(addr);
+            }
+            String pubKey = client.findRegistation(addr.getAddress());
+            addrs.add(new AddressDTO(addr, balance, pubKey != null));
+        }
+
+        context.put("addrs", addrs);
+        context.put("query_address", qryAddr);
+        return "templates/portal-balance.vm";
+    }
+
+
+    private String pageAddressList(HttpServerExchange exchange, VelocityContext context) throws Exception {
+
+        Map<String, Deque<String>> qparams = exchange.getQueryParameters();
+        List<AddressDTO> addrs = new ArrayList<>();
+
+        String error = null;
+
+        try {
+            error = qparams.get("error").getFirst();
+        } catch(NullPointerException e) { }
+
+        for (Address addr : getAddressWithLabel()) {
+            BigDecimal balance;
+            if (!addr.getLabels().isEmpty()) {
+                String label = addr.getLabels().get(0);
+                balance = wallet.getBalance(label);
+            } else {
+                balance = wallet.getBalance(addr);
+            }
+            String pubKey = client.findRegistation(addr.getAddress());
+            addrs.add(new AddressDTO(addr, balance, pubKey != null));
+        }
+
+        String envLabel = System.getenv().get(Constants.ENV_WEBUI_LABEL);
+        envLabel = envLabel != null ? envLabel : "Bob";
+
+        context.put("error", error);
+        context.put("envLabel", envLabel);
+        context.put("addrs", addrs);
+
+        return "templates/portal-addresses.vm";
+    }
+
     private String pageHome(VelocityContext context) throws Exception {
+
+        int addrCount = 0;
+        int wAddrCount = 0;
+        int fileCount = 0;
 
         List<AddressDTO> addrs = new ArrayList<>();
 
         for (Address addr : getAddressWithLabel()) {
             BigDecimal balance = wallet.getBalance(addr);
             String pubKey = client.findRegistation(addr.getAddress());
+
             addrs.add(new AddressDTO(addr, balance, pubKey != null));
+
+            List<SFHandle> fhandles = new ArrayList<>(client.findIPFSContent(addr.getAddress(), 10000L));
+            fhandles.addAll(client.findLocalContent(addr.getAddress()));
+            fileCount = fileCount + fhandles.size();
+            if (addr.isWatchOnly()) {
+                wAddrCount++;
+            } else {
+                addrCount++;
+            }
         }
 
-        String envLabel = SystemUtils.getenv(Constants.ENV_WEBUI_LABEL, "Bob");
+        String envLabel = System.getenv().get(Constants.ENV_WEBUI_LABEL);
+        envLabel = envLabel != null ? envLabel : "Bob";
 
         context.put("envLabel", envLabel);
         context.put("addrs", addrs);
+        context.put("addrCount", addrCount);
+        context.put("watchAddrCount", wAddrCount);
+        context.put("fileCount", fileCount);
 
         return "templates/portal-home.vm";
     }
 
     // [TODO #12] Wallet generates unwanted addresses for default account
-    // Here we filter addresses for the default acount, if we already have labeled addresses
+    // Here we filter addresses for the default account, if we already have labeled addresses
     private List<Address> getAddressWithLabel() {
 
         // Get the list of non-change addresses
@@ -433,6 +602,10 @@ public class ContentHandler implements HttpHandler {
 
     private void redirectHomePage(HttpServerExchange exchange) throws Exception {
         new RedirectHandler("/portal").handleRequest(exchange);
+    }
+
+    private void redirectAddressPage(HttpServerExchange exchange) throws Exception {
+            new RedirectHandler("/portal/addresses").handleRequest(exchange);
     }
 
     private void redirectFileList(HttpServerExchange exchange, String rawAddr) throws Exception {
@@ -504,4 +677,5 @@ public class ContentHandler implements HttpHandler {
             return String.format("[addr=%s, ro=%b, label=%s, reg=%b, bal=%.4f]", getAddress(), isWatchOnly(), getLabel(), isRegistered(), getBalance());
         }
     }
+
 }

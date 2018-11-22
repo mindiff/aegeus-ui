@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Aegeus Portal | $navTitle</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+
+    <!-- Custom fonts for this template-->
+    <link href="/css/fontawesome-all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- SB Admin -->
+    <link rel="stylesheet" href="/css/sb-admin.css" type="text/css">
+
+    <!-- App CSS -->
+    <link rel="stylesheet" href="/css/app.css" type="text/css">
+
+</head>
+
+<body id="page-top">
+
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+        <img class="aeg-logo" src="/img/aeg_shield.png" alt="Aegeus">
+        <a class="navbar-brand mr-1" href="/portal">Aegeus</a>
+    </nav>
+
+    <div id="wrapper">
+
+        <!-- Menu -->
+            #parse( "templates/menu.vm" )
+        <!-- END Menu -->
+
+        <div id="content-wrapper">
+            <div class="container-fluid">
+
+                <!-- Breadcrumbs-->
+                    #parse( "templates/breadcrumbs.vm" )
+                <!-- END Breadcrumbs-->
+
+                <!-- Errors -->
+                    #if ( $error )
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        $error
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    #end
+                <!-- END Errors -->
+
+                <!-- MAIN Content -->

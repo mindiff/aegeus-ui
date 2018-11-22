@@ -1,0 +1,18 @@
+<ul class="sidebar navbar-nav toggled">
+    <li class="nav-item $homeActive">
+        <a class="nav-link" href="/portal">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+    <li class="nav-item $addressesActive">
+        <a class="nav-link" href="/portal/addresses">
+            <i class="fab aeg-shield"></i>
+            <span>Addresses</span></a>
+    </li>
+    <li class="nav-item $filesActive">
+        <a class="nav-link show-select-address" href="#">
+            <i class="fas fa-fw fa-list"></i>
+            <span>Files</span></a>
+    </li>
+</ul>

@@ -2,6 +2,7 @@
 
 <head>
 <link rel="stylesheet" href="/css/demo.css">
+<title>NO SUPPOSED TO BE USED</title>
 </head>
 
 <body>
@@ -17,7 +18,7 @@
 <table>
 <tr class="gray">
     <td>$addr.label</td>
-    <td><a href="/portal/plist?addr=$addr.address">$addr.address</a></td>
+    <td><a href="/portal/files?addr=$addr.address">$addr.address</a></td>
     <td>$addr.balance</td>
 </tr>
 </table>

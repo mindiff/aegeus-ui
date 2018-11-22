@@ -1,0 +1,7 @@
+#if ( ! $addrs.empty )
+    #foreach( $addr in $addrs )
+        #if ( ! $addr.watchOnly && $query_address == $addr.address)
+            $addr.balance
+        #end
+    #end
+#end

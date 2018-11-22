@@ -1,71 +1,136 @@
-<html>
+#set( $addressesActive = 'active' )
+#set( $navTitle = 'File List' )
+#set( $crumb = 'Files' )
+#parse( "templates/header.vm" )
+    <div class="address-label">Address: <span class="address"></span></div>
 
-<head>
-<link rel="stylesheet" href="/css/demo.css">
-</head>
+    <!-- MAIN Content -->
+    <ul class="nav nav-fill nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item mr-1">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Local Files</a>
+        </li>
+        <li class="nav-item mr-1">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">IPFS Files</a>
+        </li>
 
-<body>
-<table>
-<tr>
-<td><img alt="logo" width="111" height="54" data-sticky-width="82" data-sticky-height="40" data-sticky-top="33" src="/img/logo.png"></td>
-<td valign="bottom"><a href="/portal">Home</a></td>
-<tr>
-</table>
+        #if ( $addr.getBalance() > 0 )
+            <li class="nav-item mr-1">
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Create Document</a>
+            </li>
 
-<h1>Files</h1>
-
-<p/>
-
-<table>
-<tr class="gray">
-    <td style=".owner">$addr.label</td>
-    <td>$addr.address</td>
-    <td>$addr.balance</td>
-</tr>
-</table>
-
-<form action="/portal/padd">
-<input type="hidden" name="addr" value="$addr.address">
-<input type="submit" value="Add Content">
-</form>
-
-#if ( ! $files.empty )
-
-    <h2>List of IPFS files</h2>
-
-    <table>
-    #foreach( $file in $files )
-        #if ( $file.cid && $file.available )
-            <tr>
-            <form id="form-$file.cid" action="/portal/fget">
-            <input type="hidden" name="addr" value="$addr.address">
-            <input type="hidden" name="cid" value="$file.cid">
-            <td><input type="text" name="path" value="$file.path"></td>
-            <td><a href="$gatewayUrl/$file.cid" target="_blank">$file.cid</a></td>
-            <td><a href="javascript:{}" onclick="document.getElementById('form-$file.cid').submit()">get</a></td>
-            <td><a href="/portal/psend?addr=$addr.address&path=$file.path&cid=$file.cid">send</a></td>
-            </form>
-            </tr>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-url-tab" data-toggle="pill" href="#pills-url" role="tab" aria-controls="pills-url" aria-selected="false">Add By URL</a>
+            </li>
         #end
-    #end
-    </table>
+    </ul>
+    <hr>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div id="local-file-list">
+                <h3>Local Files</h3>
+                <table id="local-files" class="table table-bordered table-sm">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    #foreach( $file in $files )
+                        #if ( ! $file.cid && $file.available )
+                            <tr>
+                                <td>$file.path</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-primary btn-sm show-file" data-address="$addr.address" data-path="$file.path">show</button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/portal/fdel?addr=$addr.address&path=$file.path';">delete</button>
+                                </td>
+                            </tr>
+                        #end
+                    #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <h2>List of local files</h2>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div id="ipfs-file-list">
+                <h3>IPFS Files</h3>
+                <table id="ipfs-files" class="table table-bordered table-sm">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    #foreach( $file in $files )
+                        #if ( $file.cid && $file.available )
+                        <tr>
+                            <form id="form-$file.cid" action="/portal/fget">
+                                <input type="hidden" name="addr" value="$addr.address">
+                                <input type="hidden" name="cid" value="$file.cid">
+                                <td><input type="text" name="path" value="$file.path"></td>
+                                <td><a href="$gatewayUrl/$file.cid" target="_blank">$file.cid</a></td>
+                                <td>
+                                    <!-- <button type="button" class="btn btn-outline-primary btn-sm mr-1" onclick="document.getElementById('form-$file.cid').submit()">get</a> -->
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/portal/psend?addr=$addr.address&path=$file.path&cid=$file.cid';">send</a>
+                                </td>
+                            </form>
+                        </tr>
+                        #end
+                    #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <table>
-    #foreach( $file in $files )
-        #if ( ! $file.cid && $file.available )
-            <tr>
-            <td>$file.path</td>
-            <td>&nbsp;</td>
-            <td><a href="/portal/fshow?addr=$addr.address&path=$file.path">show</a></td>
-            <td><a href="/portal/fdel?addr=$addr.address&path=$file.path">delete</a></td>
-            </tr>
+        #if ( $addr.getBalance() > 0 )
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                <h3>Add Content</h3>
+                <img id="add-content-loading" src="/img/black-ajax-loader.gif" alt="Adding content..." class="mx-auto d-none" />
+                <form action="/portal/addtxt">
+                    <div class="form-group">
+                        <input name="path" type="text" class="form-control" id="content-path" aria-describedby="contentHelp" placeholder="Filename">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" class="form-control" id="content-content" rows="3" aria-describedby="contentContentHelp" placeholder="Add your content here"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Content</button>
+                    <input name="addr" type="hidden" value="$addr.address">
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="pills-url" role="tabpanel" aria-labelledby="pills-url-tab">
+                <h3>Add Content By URL</h3>
+                <form action="/portal/addurl" id="add-content-url">
+                    <div class="form-group">
+                        <input name="path" type="text" class="form-control" id="content-path" aria-describedby="contentHelpPath" placeholder="Path">
+                        <small id="contentHelpPath" class="form-text text-muted">Give this content a filename/label for your reference.</small>
+                    </div>
+                    <div class="form-group">
+                        <input name="url" type="text" class="form-control" id="content-url" aria-describedby="contentHelpURL" placeholder="Content URL">
+                        <small id="contentHelpURL" class="form-text text-muted">The URL to fetch your content from.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Content</button>
+                    <input name="addr" type="hidden" value="$addr.address">
+                </form>
+            </div>
         #end
-    #end
-    </table>
-#end
+    </div>
 
+<!-- File Modal -->
+<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END FileModal -->
 
-</body>
-</html>
+#set( $customJS = '<script src="/js/files.js"></script>' )
+#parse( "templates/footer.vm" )

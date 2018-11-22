@@ -1,0 +1,90 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template-overviews/simple-sidebar)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+
+
+.navbar-dark .navbar-brand:hover,
+.sidebar .nav-item .nav-link:hover,
+a,
+.btn-outline-primary:hover,
+.btn-outline-primary {
+    color: #0088cc;
+}
+
+.btn-outline-primary {
+    border-color: #0088cc;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+}
+
+a:hover {
+    color: #004085;
+    text-decoration: none;
+}
+
+table#accounts {
+    width: 100%;
+}
+
+.card {
+    background: url(../img/slide-bg.jpg) !important;
+}
+
+.card-footer {
+    border-top: solid 2px #fff;
+}
+
+.counts img {
+    margin-top: -5px;
+}
+
+#pills-tab.nav-pills a:not(.active):hover {
+    color: #007bff;
+    border: solid 1px #007bff;
+    border-radius: .25rem;
+    margin: -1px;
+}
+
+.address-label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+#address-list {
+    list-style-type: none;
+}
+
+.footer {
+    background-color: #f0f0f0;
+    padding: 15px 0;
+}
+
+#pills-help p {
+    font-weight: 600;
+}
+
+.far.fa-copy {
+    cursor: pointer;
+}
+
+.aeg-shield {
+    display: block;
+    margin-top: -5px;
+}
+
+.aeg-logo {
+    height: 50px;
+}
+
+.nav-item .nav-link .aeg-shield {
+    height: 25px;
+    background-image: url('../img/aeg_shield_grey.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}

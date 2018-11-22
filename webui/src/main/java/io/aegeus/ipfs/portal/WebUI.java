@@ -16,7 +16,6 @@ import io.nessus.Blockchain;
 import io.nessus.BlockchainFactory;
 import io.nessus.Network;
 import io.nessus.ipfs.IPFSClient;
-import io.nessus.utils.SystemUtils;
 import io.undertow.Undertow;
 
 public class WebUI {
@@ -29,20 +28,26 @@ public class WebUI {
 
         try {
 
-            String envHost = SystemUtils.getenv(Constants.ENV_JAXRS_HOST, "127.0.0.1");
-            String envPort = SystemUtils.getenv(Constants.ENV_JAXRS_PORT, "8081");
+            String envHost = System.getenv(Constants.ENV_JAXRS_HOST);
+            String envPort = System.getenv(Constants.ENV_JAXRS_PORT);
+            envHost = envHost != null ? envHost : "127.0.0.1";
+            envPort = envPort != null ? envPort : "8081";
             URI jaxrsURI = new URI(String.format("http://%s:%s/aegeus", envHost, envPort));
             LOG.info("AEG JAXRS: {}", jaxrsURI);
 
             AegeusClient client = new AegeusClient(jaxrsURI);
 
-            envHost = SystemUtils.getenv(IPFSClient.ENV_IPFS_GATEWAY_HOST, "127.0.0.1");
-            envPort = SystemUtils.getenv(IPFSClient.ENV_IPFS_GATEWAY_PORT, "8080");
+            envHost = System.getenv(IPFSClient.ENV_IPFS_GATEWAY_HOST);
+            envPort = System.getenv(IPFSClient.ENV_IPFS_GATEWAY_PORT);
+            envHost = envHost != null ? envHost : "127.0.0.1";
+            envPort = envPort != null ? envPort : "8080";
             URI gatewayURI = new URI(String.format("http://%s:%s/ipfs", envHost, envPort));
             LOG.info("IPFS Gateway: {}", gatewayURI);
 
-            envHost = SystemUtils.getenv(Constants.ENV_WEBUI_HOST, "0.0.0.0");
-            envPort = SystemUtils.getenv(Constants.ENV_WEBUI_PORT, "8082");
+            envHost = System.getenv().get(Constants.ENV_WEBUI_HOST);
+            envPort = System.getenv().get(Constants.ENV_WEBUI_PORT);
+            envHost = envHost != null ? envHost : "0.0.0.0";
+            envPort = envPort != null ? envPort : "8082";
             LOG.info("AEG WebUI: http://" + envHost + ":" + envPort + "/portal");
 
             URL rpcUrl = AegeusApplication.rpcUrl();

@@ -1,85 +1,42 @@
-<html>
+#set( $homeActive = 'active' )
+#set( $navTitle = 'Dashboard' )
+#parse( "templates/header.vm" )
+    <div class="row">
+        <div class="col-xl-6 col-sm-6 mb-3">
+            <div class="card text-white bg-primary o-hidden h-100 aegeus-bg">
+                <div class="card-body">
+                    <div class="card-body-icon">
+                        <i class="fas fa-fw fa-list"></i>
+                    </div>
+                    <div class="mr-5"><span id="file-count" class="counts">$fileCount</span> Files</div>
+                </div>
+                <a class="show-select-address card-footer text-white clearfix small z-1" href="/portal/files">
+                    <span class="float-left">View Details</span>
+                    <span class="float-right">
+                <i class="fas fa-angle-right"></i>
+              </span>
+                </a>
+            </div>
+        </div>
+        <div class="col-xl-6 col-sm-6 mb-3">
+            <div class="card text-white bg-primary o-hidden h-100 aegeus-bg">
+                <div class="card-body">
+                    <div class="card-body-icon">
+                        <i class="fab aeg-shield">
+                        <img src="/img/aeg_shield.png">
+                        </i>
+                    </div>
+                    <div class="mr-5"><span id="address-count" class="counts">$addrCount</span> Addresses</div>
+                </div>
+                <a class="card-footer text-white clearfix small z-1" href="/portal/addresses">
+                    <span class="float-left">View Details</span>
+                    <span class="float-right">
+                <i class="fas fa-angle-right"></i>
+              </span>
+                </a>
+            </div>
+        </div>
+    </div>
 
-<head>
-<link rel="stylesheet" href="/css/demo.css">
-</head>
-
-<body>
-<table>
-<tr>
-<td><img alt="logo" width="111" height="54" data-sticky-width="82" data-sticky-height="40" data-sticky-top="33" src="/img/logo.png"></td>
-<td valign="bottom"><a href="/portal">Home</a></td>
-<tr>
-</table>
-
-<h1>Addresses</h1>
-
-#if ( ! $addrs.empty )
-
-    <h2>Receiving Addresses</h2>
-
-    <table>
-    <tr>
-    </tr>
-    #foreach( $addr in $addrs )
-
-        #if ( $addr.watchOnly )
-            <tr class="gray">
-        #else
-            <tr>
-        #end
-
-        #if ( $addr.label != "" )
-            <td>$addr.label</td>
-        #else
-            <form id="form-assign-label-$velocityCount" action="/portal/assign">
-            <input name="addr" type="hidden" value="$addr.address">
-            <td><input name="label" type="text" value="$envLabel"></td>
-        #end
-
-        #if ( $addr.watchOnly )
-            <td>$addr.address</td>
-            <td>&nbsp;</td>
-        #else
-            #if ( $addr.balance == 0 || ! $addr.registered )
-                <td>$addr.address</td>
-            #else
-                <td><a href="/portal/plist?addr=$addr.address">$addr.address</a></td>
-            #end
-            <td>$addr.balance</td>
-        #end
-
-        #if ( $addr.label != "" )
-            #if ( ! $addr.registered && ! $addr.watchOnly && $addr.balance > 0 )
-                <td><a href="/portal/regaddr?addr=$addr.address">register</a></td>
-            #end
-        #else
-            <td><a href="#" onclick="document.getElementById('form-assign-label-$velocityCount').submit();">assign</a></td>
-            </form>
-        #end
-
-        </tr>
-
-    #end
-    </table>
-#end
-
-<p/>
-
-<table>
-<tr><td><h2>New Address</h2></td></tr>
-<form action="/portal/newaddr">
-<tr><td><input name="label" type="text" value="$envLabel"></td><td><input type="submit"></td></tr>
-</form>
-
-<tr><td>&nbsp;</td></tr>
-
-<tr><td><h2>Import Key</h2></td></tr>
-<form action="/portal/impkey">
-<tr><td><input name="label" type="text" value="$envLabel"></td><td><input name="impkey" type="text" size="40"></td><td><input type="submit"></td></tr>
-</form>
-</table>
-
-
-</body>
-</html>
+#set( $customJS = '' )
+#parse( "templates/footer.vm" )

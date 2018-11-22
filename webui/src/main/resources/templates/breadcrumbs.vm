@@ -1,0 +1,10 @@
+<ol class="breadcrumb">
+    #if ($crumb)
+        <li class="breadcrumb-item">
+            <a href="/portal">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">$crumb</li>
+    #else
+        <li class="breadcrumb-item active">Dashboard</li>
+    #end
+</ol>
