@@ -15,19 +15,23 @@ mkdir docker
 mkdir docker/aegeusd
 tar -C docker/aegeusd -xzf bootstrap.tgz
 
+export RPCUSER=aeg
+export RPCPASS=aegpass
+export RPCPORT=51473
+
 cat << EOF > docker/aegeus-server.conf
-rpcuser=aeg
-rpcpassword=aegpass
-rpcport=51473
-rpcallowip=127.0.0.1
+rpcuser=$RPCUSER
+rpcpassword=$RPCPASS
+rpcport=$RPCPORT
+rpcallowip=172.17.0.1/24
 listen=1
 server=1
 EOF
 
 cat << EOF > docker/aegeus-client.conf
-rpcuser=aeg
-rpcpassword=aegpass
-rpcport=51473
+rpcuser=$RPCUSER
+rpcpassword=$RPCPASS
+rpcport=$RPCPORT
 EOF
 
 cat << EOF > docker/Dockerfile
@@ -71,37 +75,37 @@ COPY aegeus-client.conf /root/.aegeus/aegeus.conf
 RUN mkdir /var/lib/aegeusd
 COPY aegeusd /var/lib/aegeusd
 
-# Expose the API port
-EXPOSE 51473
-
 # Set some default env vars
-ENV RPCUSER=aeg
-ENV RPCPASS=aegpass
+ENV RPCUSER=$RPCUSER
+ENV RPCPASS=$RPCPASS
+
+# Expose the API port
+EXPOSE $RPCPORT
 
 # Use the daemon as entry point
 ENTRYPOINT ["aegeusd", "-datadir=/var/lib/aegeusd", "-conf=/etc/aegeusd/aegeus.conf"]
 EOF
 
-docker rmi -f aegeus/aegeusd
-docker build -t aegeus/aegeusd:$NVERSION docker/
+docker build -t aegeus/aegeusd docker/
+docker push aegeus/aegeusd
 
-docker tag aegeus/aegeusd:$NVERSION aegeus/aegeusd
+docker tag aegeus/aegeusd aegeus/aegeusd:$NVERSION
 docker push aegeus/aegeusd:$NVERSION
-
+```
 
 ### Run the Aegeus daemon
 
 ```
-export MNNAME=aegd
+export CNAME=aegd
 
-docker rm -f $MNNAME
+docker rm -f $CNAME
 docker run --detach \
     -p 29328:29328 \
-    --memory=200m --memory-swap=2g \
-    --name $MNNAME \
+    --memory=300m --memory-swap=2g \
+    --name $CNAME \
     aegeus/aegeusd
 
-watch docker exec $MNNAME aegeus-cli getinfo
+watch docker exec aegd aegeus-cli getinfo
 
-docker exec $MNNAME tail -f /var/lib/aegeusd/debug.log
+docker exec aegd tail -f /var/lib/aegeusd/debug.log
 ```

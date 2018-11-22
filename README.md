@@ -4,7 +4,7 @@ Here we proudly bring you a preview of the Aegeus user interface.
 
 ![preview](docs/src/markdown/trail/img/bob-list-03-small.png)
 
-A full walk through of the demo is here: [QmfYfBWv8ePVsGN4Uo6JJHj8n8XmGJf9fAoCjMgmLvhY16](https://ipfs.io/ipfs/QmfYfBWv8ePVsGN4Uo6JJHj8n8XmGJf9fAoCjMgmLvhY16/trail)
+A full walk through of the demo is here: [QmXCT8Ds5Z12ihg5JfS3qNeAeNH2j2qaht8UpCqzq47Eto](https://ipfs.io/ipfs/QmXCT8Ds5Z12ihg5JfS3qNeAeNH2j2qaht8UpCqzq47Eto/trail)
 
 ### Installing Docker
 
@@ -32,10 +32,11 @@ For a mixed setup with already running IPFS & AEG service and newly hosted Docke
 Here is the quickstart to get the whole system running in no time ...
 
     export GATEWAYIP=[YOUR_PUBLIC_IP]
-    docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
-    docker run --detach --name ipfs -p 4001:4001 -p 8080:8080 -e GATEWAYIP=$GATEWAYIP --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
-    docker run --detach --name jaxrs -p 8081:8081 --link aegd:aeg --link ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs
-    docker run --detach --name webui -p 8082:8082 --link aegd:aeg --link ipfs:ipfs --link jaxrs:jaxrs --memory=200m --memory-swap=2g --env AEG_WEBUI_LABEL=Bob aegeus/aegeus-webui
+
+    docker run --detach --name aegd -p 29328:29328 --memory=300m --memory-swap=2g aegeus/aegeusd
+    docker run --detach --name aeg-ipfs -p 4001:4001 -p 8080:8080 -e GATEWAYIP=$GATEWAYIP --memory=300m --memory-swap=2g aegeus/aegeus-ipfs
+    docker run --detach --name aeg-jaxrs --expose 8081 --link aegd:aeg --link aeg-ipfs:ipfs --memory=100m --memory-swap=2g aegeus/aegeus-jaxrs
+    docker run --detach --name aeg-webui -p 8082:8082 --link aegd:aeg --link aeg-ipfs:ipfs --link aeg-jaxrs:jaxrs --memory=100m --memory-swap=2g --env AEG_WEBUI_LABEL=Bob aegeus/aegeus-webui
 
 You should now be able to access the WebUI at: [http://127.0.0.1:8082/portal](http://127.0.0.1:8082/portal)
 

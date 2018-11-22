@@ -16,17 +16,17 @@ docker push aegeus/aegeus-ipfs:$NVERSION
 ### Run the IPFS image 
 
 ```
-export NAME=ipfs
-export GATEWAYIP=185.92.221.103
+export CNAME=aeg-ipfs
+export GATEWAYIP=192.168.178.20
 
-docker rm -f $NAME
+docker rm -f $CNAME
 docker run --detach \
     -p 4001:4001 \
     -p 8080:8080 \
     --env GATEWAYIP=$GATEWAYIP \
-    --memory=200m --memory-swap=2g \
-    --name $NAME \
+    --memory=300m --memory-swap=2g \
+    --name $CNAME \
     aegeus/aegeus-ipfs
 
-docker logs $NAME
+docker logs aeg-ipfs
 ```

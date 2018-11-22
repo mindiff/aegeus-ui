@@ -2,11 +2,6 @@
 
 This type of installation requires a working [Docker](https://www.docker.com/community-edition#/download) environment.
 
-To verify that your Docker env is setup properly, you can list the running container like this ...
-
-    $ docker ps
-    CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-
 In total there are four Docker images to make up the complete system.
 
 1. [aegeus/aegeusd](https://hub.docker.com/r/aegeus/aegeusd)
@@ -29,10 +24,9 @@ For this to work, your Aegeus wallet needs to bind to an external IP
     txindex=1
     rpcuser=aeg
     rpcpassword=aegpass
-    rpcbind=192.168.178.20
-    rpcallowip=192.168.178.20
-    rpcconnect=192.168.178.20
     rpcport=51473
+    rpcconnect=192.168.178.20
+    rpcallowip=192.168.178.20
     wallet=test-wallet.dat
 
 Verify that this works
@@ -71,7 +65,7 @@ To start the Aegeus bridge in Docker, you can run ...
     export LOCALIP=192.168.178.20
 
     docker run --detach \
-        -p 8081:8081 \
+        --expose 8081 \
         --env IPFS_PORT_5001_TCP_ADDR=$LOCALIP \
         --env IPFS_PORT_5001_TCP_PORT=5001 \
         --env IPFS_PORT_8080_TCP_ADDR=$LOCALIP \
@@ -81,12 +75,12 @@ To start the Aegeus bridge in Docker, you can run ...
         --env AEG_ENV_RPCUSER=aeg \
         --env AEG_ENV_RPCPASS=aegpass \
         --memory=200m --memory-swap=2g \
-        --name jaxrs \
+        --name aeg-jaxrs \
         aegeus/aegeus-jaxrs
 
 On bootstrap the bridge reports some connection properties.
 
-    docker logs jaxrs
+    docker logs aeg-jaxrs
 
     AegeusBlockchain: http://aeg:*******@192.168.178.20:51473
     AegeusNetwork Version: 2000000
@@ -101,7 +95,7 @@ In this setup the Aegeus UI is optional as well. Still, lets try to connect it t
 
     docker run --detach \
         -p 8082:8082 \
-        --link jaxrs:jaxrs \
+        --link aeg-jaxrs:jaxrs \
         --env IPFS_ENV_GATEWAYIP=$LOCALIP \
         --env IPFS_PORT_8080_TCP_ADDR=$LOCALIP \
         --env IPFS_PORT_8080_TCP_PORT=8080 \
@@ -111,20 +105,12 @@ In this setup the Aegeus UI is optional as well. Still, lets try to connect it t
         --env AEG_ENV_RPCPASS=aegpass \
         --env AEG_WEBUI_LABEL=$LABEL \
         --memory=200m --memory-swap=2g \
-        --name webui \
+        --name aeg-webui \
         aegeus/aegeus-webui
-
-Now that everything is running, it should look like this
-
-    docker ps
-
-    CONTAINER ID        IMAGE                 COMMAND                CREATED             STATUS              PORTS                    NAMES
-    dac52630fc02        aegeus/aegeus-webui   "aegeus-webui"         12 seconds ago      Up 11 seconds       0.0.0.0:8082->8082/tcp   webui
-    e4099bd9483d        aegeus/aegeus-jaxrs   "aegeus-jaxrs start"   53 seconds ago      Up 52 seconds       0.0.0.0:8081->8081/tcp   jaxrs
 
 The WebUI also reports some connection properties.
 
-    docker logs webui
+    docker logs aeg-webui
 
     AEG JAXRS: http://172.17.0.3:8081/aegeus
     IPFS Gateway: http://192.168.178.20:8080/ipfs
@@ -135,3 +121,6 @@ The WebUI also reports some connection properties.
 You should now be able to access the WebUI at: [http://127.0.0.1:8082/portal](http://127.0.0.1:8082/portal)
 
 Everything else should work as described [here](Setup-All-Docker.md).
+
+That's it - Enjoy!
+

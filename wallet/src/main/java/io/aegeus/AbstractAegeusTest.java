@@ -53,7 +53,8 @@ public abstract class AbstractAegeusTest extends AbstractBlockchainTest {
     protected void redeemLockedUtxos(String label, Address addr) {
 
         // Unlock all UTXOs
-        wallet.listLockUnspent(Arrays.asList(addr)).stream().forEach(utxo -> wallet.lockUnspent(utxo, true));
+        wallet.listLockUnspent(Arrays.asList(addr)).stream()
+            .forEach(utxo -> wallet.lockUnspent(utxo, true));
 
         // Redeem all locked UTXOs
         List<UTXO> utxos = wallet.listUnspent(label);
