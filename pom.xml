@@ -7,7 +7,7 @@
     <version>1.0.0.Alpha5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Aaegeus</name>
+    <name>Aegeus</name>
 
     <scm>
         <connection>scm:git:https://github.com/AegeusCoin/aegeus-ui</connection>

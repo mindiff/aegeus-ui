@@ -40,7 +40,7 @@ To start the Aegeus daemon in Docker, you can run ...
         -p 29328:29328 \
         --memory=200m --memory-swap=2g \
         --name aegd \
-        aegeus/aegeusd:2.0.4
+        aegeus/aegeusd:3.0
 
 It'll take a little while for the network to sync. You can watch progress like this ...
 
@@ -109,7 +109,7 @@ On bootstrap the bridge reports some connection properties.
     docker logs jaxrs
 
     AegeusBlockchain: http://aeg:*******@172.17.0.3:51473
-    AegeusNetwork Version: 2000400
+    AegeusNetwork Version: 3000000
     IPFS Version: 0.4.18
     Aegeus JAXRS: http://0.0.0.0:8081/aegeus
 
