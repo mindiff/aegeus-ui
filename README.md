@@ -4,7 +4,7 @@ Here we proudly bring you a preview of the Aegeus user interface.
 
 ![preview](docs/src/markdown/trail/img/bob-list-03-small.png)
 
-A full walk through of the demo is here: [QmbhZ6FMTkhFHp8pWyp1bwdvHFQ8FYfW8S44mCjyar7Hdi](https://ipfs.io/ipfs/QmbhZ6FMTkhFHp8pWyp1bwdvHFQ8FYfW8S44mCjyar7Hdi)
+A full walk through of the demo is here: [QmfYfBWv8ePVsGN4Uo6JJHj8n8XmGJf9fAoCjMgmLvhY16](https://ipfs.io/ipfs/QmfYfBWv8ePVsGN4Uo6JJHj8n8XmGJf9fAoCjMgmLvhY16/trail)
 
 ### Installing Docker
 
@@ -32,7 +32,6 @@ For a mixed setup with already running IPFS & AEG service and newly hosted Docke
 Here is the quickstart to get the whole system running in no time ...
 
     export GATEWAYIP=[YOUR_PUBLIC_IP]
-
     docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
     docker run --detach --name ipfs -p 4001:4001 -p 8080:8080 -e GATEWAYIP=$GATEWAYIP --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
     docker run --detach --name jaxrs -p 8081:8081 --link aegd:aeg --link ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs

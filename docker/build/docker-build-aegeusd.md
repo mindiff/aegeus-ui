@@ -1,42 +1,25 @@
 ## Build the AEG daemon image
 
-### Prepare bootstrap data
-
-Optionally, extract bootstrap data from a running container
+### Build the Aegeus daemon
 
 ```
-export NVERSION=2.0.3
+export NVERSION=3.0
 
-export MNNAME=aegd
-export BLOCKCOUNT=`docker exec $MNNAME aegeus-cli getblockcount`
-export MNARCHIVE="aegeusd-$BLOCKCOUNT.tgz"
+# Fetch the bootstrap data
+wget -O bootstrap.tgz http://ipfsgw1.aegeus.io/QmTKM3LKJndwwvS6Aprc5Ptkz9DGy6PTSErJagqBmTfXw7
 
-docker stop $MNNAME
-docker cp $MNNAME:/var/lib/aegeusd aegeusd
-docker start $MNNAME
-
-cd aegeusd
-rm -rf *.old *.dat *.log *.conf backups database
-cd ..
-
-tar czf $MNARCHIVE aegeusd
-rm -rf aegeusd
-```
-
-### Build the Aegeus daemon 
-
-```
 rm -rf docker
 mkdir docker
 
-export NVERSION=2.0.3
+# Copy bootstrap data to the build dir
+mkdir docker/aegeusd
+tar -C docker/aegeusd -xzf bootstrap.tgz
 
 cat << EOF > docker/aegeus-server.conf
 rpcuser=aeg
 rpcpassword=aegpass
 rpcport=51473
 rpcallowip=127.0.0.1
-rpcallowip=172.17.0.1/24
 listen=1
 server=1
 EOF
@@ -65,10 +48,12 @@ RUN git clone https://github.com/AegeusCoin/aegeus.git
 
 # Build aegeusd
 WORKDIR aegeus
+
 RUN git checkout $NVERSION
 RUN ./autogen.sh
 RUN ./configure
 RUN make
+RUN strip src/aegeusd
 
 # Install the binaries
 RUN cp src/aegeusd /usr/bin/
@@ -82,8 +67,9 @@ RUN rm -rf aegeus
 COPY aegeus-server.conf /etc/aegeusd/aegeus.conf
 COPY aegeus-client.conf /root/.aegeus/aegeus.conf
 
-# Create the data dir 
+# Copy bootstrap data
 RUN mkdir /var/lib/aegeusd
+COPY aegeusd /var/lib/aegeusd
 
 # Expose the API port
 EXPOSE 51473
@@ -92,46 +78,16 @@ EXPOSE 51473
 ENV RPCUSER=aeg
 ENV RPCPASS=aegpass
 
-# Use the daemon as entry point 
-ENTRYPOINT ["aegeusd", "-conf=/etc/aegeusd/aegeus.conf", "-datadir=/var/lib/aegeusd"]
+# Use the daemon as entry point
+ENTRYPOINT ["aegeusd", "-datadir=/var/lib/aegeusd", "-conf=/etc/aegeusd/aegeus.conf"]
 EOF
 
 docker rmi -f aegeus/aegeusd
-docker build -t aegeus/aegeusd docker/
+docker build -t aegeus/aegeusd:$NVERSION docker/
 
-docker tag aegeus/aegeusd aegeus/aegeusd:$NVERSION
+docker tag aegeus/aegeusd:$NVERSION aegeus/aegeusd
 docker push aegeus/aegeusd:$NVERSION
-```
 
-### Build Aegeus daemon with bootstrap data
-
-```
-rm -rf docker
-mkdir docker
-
-export NVERSION=2.0.3
-export BLOCKCOUNT=238080
-export MNARCHIVE=aegeusd-$BLOCKCOUNT.tgz
-
-tar xzf $MNARCHIVE -C docker/
- 
-cat << EOF > docker/Dockerfile
-FROM aegeus/aegeusd:$NVERSION
-
-COPY aegeusd /var/lib/aegeusd
-
-# Use the daemon as entry point 
-ENTRYPOINT ["aegeusd", "-conf=/etc/aegeusd/aegeus.conf", "-datadir=/var/lib/aegeusd"]
-EOF
-
-docker rmi -f aegeus/aegeusd
-docker build -t aegeus/aegeusd docker/
-
-docker push aegeus/aegeusd
-
-docker tag aegeus/aegeusd aegeus/aegeusd:$NVERSION-$BLOCKCOUNT
-docker push aegeus/aegeusd:$NVERSION-$BLOCKCOUNT
-```
 
 ### Run the Aegeus daemon
 
@@ -149,4 +105,3 @@ watch docker exec $MNNAME aegeus-cli getinfo
 
 docker exec $MNNAME tail -f /var/lib/aegeusd/debug.log
 ```
-
