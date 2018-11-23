@@ -65,7 +65,6 @@ To start the Aegeus bridge in Docker, you can run ...
     export LOCALIP=192.168.178.20
 
     docker run --detach \
-        --expose 8081 \
         --env IPFS_PORT_5001_TCP_ADDR=$LOCALIP \
         --env IPFS_PORT_5001_TCP_PORT=5001 \
         --env IPFS_PORT_8080_TCP_ADDR=$LOCALIP \
@@ -103,7 +102,7 @@ In this setup the Aegeus UI is optional as well. Still, lets try to connect it t
         --env AEG_PORT_51473_TCP_PORT=51473 \
         --env AEG_ENV_RPCUSER=aeg \
         --env AEG_ENV_RPCPASS=aegpass \
-        --env AEG_WEBUI_LABEL=$LABEL \
+        --env NESSUS_WEBUI_LABEL=$LABEL \
         --memory=200m --memory-swap=2g \
         --name aeg-webui \
         aegeus/aegeus-webui

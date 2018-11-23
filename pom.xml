@@ -19,7 +19,7 @@
     <properties>
         <version.args4j>2.0.31</version.args4j>
         <version.apache.velocity>1.7</version.apache.velocity>
-        <version.io.nessus>1.0.0.Beta1</version.io.nessus>
+        <version.io.nessus>1.0.0.Beta2</version.io.nessus>
         <version.io.undertow>2.0.9.Final</version.io.undertow>
         <version.jboss.resteasy>3.6.0.Final</version.jboss.resteasy>
         <version.junit>4.11</version.junit>
@@ -38,8 +38,8 @@
     </properties>
 
     <modules>
-        <module>jaxrs</module>
         <module>wallet</module>
+        <module>jaxrs</module>
         <module>webui</module>
         <module>docs</module>
         <module>dist</module>
@@ -59,12 +59,22 @@
             </dependency>
             <dependency>
                 <groupId>io.nessus</groupId>
-                <artifactId>nessus-ipfs</artifactId>
+                <artifactId>nessus-cipher</artifactId>
                 <version>${version.io.nessus}</version>
             </dependency>
             <dependency>
                 <groupId>io.nessus</groupId>
-                <artifactId>nessus-cipher</artifactId>
+                <artifactId>nessus-ipfs-core</artifactId>
+                <version>${version.io.nessus}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.nessus</groupId>
+                <artifactId>nessus-ipfs-jaxrs</artifactId>
+                <version>${version.io.nessus}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.nessus</groupId>
+                <artifactId>nessus-ipfs-webui</artifactId>
                 <version>${version.io.nessus}</version>
             </dependency>
             <dependency>

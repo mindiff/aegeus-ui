@@ -1,5 +1,7 @@
 package io.aegeus.ipfs.portal;
 
+import static io.nessus.ipfs.portal.NessusWebUIConstants.ENV_NESSUS_WEBUI_LABEL;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,32 +30,31 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.aegeus.jaxrs.AegeusClient;
-import io.aegeus.jaxrs.Constants;
-import io.aegeus.jaxrs.SFHandle;
 import io.nessus.Blockchain;
 import io.nessus.Network;
 import io.nessus.Wallet;
 import io.nessus.Wallet.Address;
+import io.nessus.ipfs.jaxrs.JAXRSClient;
+import io.nessus.ipfs.jaxrs.SFHandle;
 import io.nessus.utils.StreamUtils;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.RedirectHandler;
 import io.undertow.util.Headers;
 
-public class ContentHandler implements HttpHandler {
+class AegeusContentHandler implements HttpHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContentHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AegeusContentHandler.class);
 
     final Blockchain blockchain;
     final Network network;
     final Wallet wallet;
 
-    final AegeusClient client;
+    final JAXRSClient client;
     final VelocityEngine ve;
     final URI gatewayURI;
 
-    ContentHandler(AegeusClient client, Blockchain blockchain, URI gatewayURI) {
+    AegeusContentHandler(JAXRSClient client, Blockchain blockchain, URI gatewayURI) {
         this.blockchain = blockchain;
         this.gatewayURI = gatewayURI;
         this.client = client;
@@ -127,7 +128,7 @@ public class ContentHandler implements HttpHandler {
 
         else if (relPath.startsWith("/portal/fdel")) {
 
-            actFileDel(exchange, context);
+            actRemoveLocalContent(exchange, context);
         }
 
         // Action file get
@@ -304,7 +305,7 @@ public class ContentHandler implements HttpHandler {
         Map<String, Deque<String>> qparams = exchange.getQueryParameters();
         String rawAddr = qparams.get("addr").getFirst();
 
-        client.register(rawAddr);
+        client.registerAddress(rawAddr);
 
         redirectHomePage(exchange);
     }
@@ -319,13 +320,13 @@ public class ContentHandler implements HttpHandler {
         redirectAddressPage(exchange);
     }
 
-    private void actFileDel(HttpServerExchange exchange, VelocityContext context) throws Exception {
+    private void actRemoveLocalContent(HttpServerExchange exchange, VelocityContext context) throws Exception {
 
         Map<String, Deque<String>> qparams = exchange.getQueryParameters();
         String rawAddr = qparams.get("addr").getFirst();
         String relPath = qparams.get("path").getFirst();
 
-        client.deleteLocalContent(rawAddr, relPath);
+        client.removeLocalContent(rawAddr, relPath);
 
         redirectFileList(exchange, rawAddr);
     }
@@ -430,7 +431,7 @@ public class ContentHandler implements HttpHandler {
 
         try {
             addr = wallet.findAddress(rawAddr);
-            pubKey = client.findRegistation(rawAddr);
+            pubKey = client.findAddressRegistation(rawAddr);
         } catch (IllegalStateException e) {
             new RedirectHandler("/portal/addresses?error=" + e.getMessage() + "!").handleRequest(exchange);
         }
@@ -451,7 +452,7 @@ public class ContentHandler implements HttpHandler {
             } else {
                 balance = wallet.getBalance(address);
             }
-            String addrPubKey = client.findRegistation(address.getAddress());
+            String addrPubKey = client.findAddressRegistation(address.getAddress());
             addrs.add(new AddressDTO(address, balance, addrPubKey != null));
         }
 
@@ -504,7 +505,7 @@ public class ContentHandler implements HttpHandler {
             } else {
                 balance = wallet.getBalance(addr);
             }
-            String pubKey = client.findRegistation(addr.getAddress());
+            String pubKey = client.findAddressRegistation(addr.getAddress());
             addrs.add(new AddressDTO(addr, balance, pubKey != null));
         }
 
@@ -533,11 +534,11 @@ public class ContentHandler implements HttpHandler {
             } else {
                 balance = wallet.getBalance(addr);
             }
-            String pubKey = client.findRegistation(addr.getAddress());
+            String pubKey = client.findAddressRegistation(addr.getAddress());
             addrs.add(new AddressDTO(addr, balance, pubKey != null));
         }
 
-        String envLabel = System.getenv().get(Constants.ENV_WEBUI_LABEL);
+        String envLabel = System.getenv().get(ENV_NESSUS_WEBUI_LABEL);
         envLabel = envLabel != null ? envLabel : "Bob";
 
         context.put("error", error);
@@ -557,7 +558,7 @@ public class ContentHandler implements HttpHandler {
 
         for (Address addr : getAddressWithLabel()) {
             BigDecimal balance = wallet.getBalance(addr);
-            String pubKey = client.findRegistation(addr.getAddress());
+            String pubKey = client.findAddressRegistation(addr.getAddress());
 
             addrs.add(new AddressDTO(addr, balance, pubKey != null));
 
@@ -571,7 +572,7 @@ public class ContentHandler implements HttpHandler {
             }
         }
 
-        String envLabel = System.getenv().get(Constants.ENV_WEBUI_LABEL);
+        String envLabel = System.getenv().get(ENV_NESSUS_WEBUI_LABEL);
         envLabel = envLabel != null ? envLabel : "Bob";
 
         context.put("envLabel", envLabel);

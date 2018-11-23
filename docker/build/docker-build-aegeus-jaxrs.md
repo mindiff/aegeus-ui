@@ -18,7 +18,9 @@ COPY aegeus-dist-$NVERSION aegeus-jaxrs
 # Make the entrypoint executable
 RUN ln -s /aegeus-jaxrs/bin/run-aegeus-jaxrs.sh /usr/local/bin/aegeus-jaxrs
 
-CMD ["start"]
+# Expose the JAXRS port
+EXPOSE 8081
+
 ENTRYPOINT ["aegeus-jaxrs"]
 EOF
 
@@ -30,26 +32,41 @@ docker tag aegeus/aegeus-jaxrs aegeus/aegeus-jaxrs:$TAGNAME
 docker push aegeus/aegeus-jaxrs:$TAGNAME
 ```
 
-### Run the AEG JAXRS image
+### Run the JAXRS image
 
 ```
 export CNAME=aeg-jaxrs
 
 docker rm -f $CNAME
 docker run --detach \
-    --link aegd:aeg \
+    --link aegd:blockchain \
     --link aeg-ipfs:ipfs \
-    --expose 8081 \
     --memory=100m --memory-swap=2g \
     --name $CNAME \
     aegeus/aegeus-jaxrs
 
-# Follow the info log
 docker logs -f aeg-jaxrs
+```
 
-# Follow the info log on the journal
-journalctl CONTAINER_NAME=aeg-jaxrs -f
+### Run the JAXRS in mixed mode
 
-# Follow the debug log
-docker exec -it aeg-jaxrs tail -f -n 100 debug.log
+This assumes you have the Blockchain and IPFS instances already running on your host
+
+```
+export CNAME=aeg-jaxrs
+export LOCALIP=192.168.178.20
+
+docker rm -f $CNAME
+docker run --detach \
+    --env IPFS_JSONRPC_ADDR=$LOCALIP \
+    --env IPFS_JSONRPC_PORT=5001 \
+    --env BLOCKCHAIN_JSONRPC_ADDR=$LOCALIP \
+    --env BLOCKCHAIN_JSONRPC_PORT=51473 \
+    --env BLOCKCHAIN_JSONRPC_USER=aeg \
+    --env BLOCKCHAIN_JSONRPC_PASS=aegpass \
+    --memory=100m --memory-swap=2g \
+    --name $CNAME \
+    aegeus/aegeus-jaxrs
+    
+docker logs aeg-jaxrs
 ```

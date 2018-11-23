@@ -8,16 +8,16 @@ If not, there is guide on how to setup a VPS that has Docker support [here](../s
 
 In case you know what you're doing already. Here is the quickstart to get the whole system running in no time ...
 
-    docker run --detach --name aegd -p 29328:29328 --memory=200m --memory-swap=2g aegeus/aegeusd
-    docker run --detach --name ipfs -p 4001:4001 -p 8080:8080 --memory=200m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
-    docker run --detach --name jaxrs -p 8081:8081 --link aegd:aeg --link ipfs:ipfs --memory=200m --memory-swap=2g aegeus/aegeus-jaxrs
-    docker run --detach --name webui -p 8082:8082 --link aegd:aeg --link ipfs:ipfs --link jaxrs:jaxrs --memory=200m --memory-swap=2g --env AEG_WEBUI_LABEL=Bob aegeus/aegeus-webui
+    docker run --detach --name aegd -p 29328:29328 --memory=300m --memory-swap=2g aegeus/aegeusd
+    docker run --detach --name aeg-ipfs -p 4001:4001 -p 8080:8080 --memory=300m --memory-swap=2g aegeus/aegeus-ipfs; sleep 20
+    docker run --detach --name aeg-jaxrs --link aegd:blockchain --link aeg-ipfs:ipfs --memory=100m --memory-swap=2g aegeus/aegeus-jaxrs
+    docker run --detach --name aeg-webui -p 8082:8082 --link aegd:blockchain --link aeg-ipfs:ipfs --link aeg-jaxrs:jaxrs --memory=100m --memory-swap=2g --env NESSUS_WEBUI_LABEL=Bob aegeus/aegeus-webui
 
 ### Running the AEG daemon image
 
     docker run --detach \
         -p 29328:29328 \
-        --memory=200m --memory-swap=2g \
+        --memory=300m --memory-swap=2g \
         --name aegd \
         aegeus/aegeusd
 
@@ -32,8 +32,8 @@ In the steps below, you would have to replace `185.92.221.103` with the external
     docker run --detach \
         -p 4001:4001 \
         -p 8080:8080 \
-        --memory=200m --memory-swap=2g \
-        --name ipfs \
+        --memory=300m --memory-swap=2g \
+        --name aeg-ipfs \
         aegeus/aegeus-ipfs
 
     sleep 6
@@ -44,11 +44,10 @@ In the steps below, you would have to replace `185.92.221.103` with the external
 ### Running the AEG JAXRS image
 
     docker run --detach \
-        -p 8081:8081 \
-        --link aegd:aeg \
-        --link ipfs:ipfs \
-        --memory=200m --memory-swap=2g \
-        --name jaxrs \
+        --link aegd:blockchain \
+        --link aeg-ipfs:ipfs \
+        --memory=100m --memory-swap=2g \
+        --name aeg-jaxrs \
         aegeus/aegeus-jaxrs
 
     watch docker logs jaxrs
@@ -57,12 +56,12 @@ In the steps below, you would have to replace `185.92.221.103` with the external
 
     docker run --detach \
         -p 8082:8082 \
-        --link aegd:aeg \
-        --link ipfs:ipfs \
-        --link jaxrs:jaxrs \
-        --env AEG_WEBUI_LABEL=Bob \
-        --memory=200m --memory-swap=2g \
-        --name webui \
+        --link aegd:blockchain \
+        --link aeg-ipfs:ipfs \
+        --link aeg-jaxrs:jaxrs \
+        --env NESSUS_WEBUI_LABEL=Bob \
+        --memory=100m --memory-swap=2g \
+        --name aeg-webui \
         aegeus/aegeus-webui
 
     watch docker logs webui

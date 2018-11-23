@@ -61,7 +61,7 @@ public class AegeusWallet extends AbstractWallet {
     }
 
     @Override
-    protected boolean isP2PKH(String addr) {
+    public boolean isP2PKH(String addr) {
         return addr.startsWith("A") || addr.startsWith("P");
     }
 
@@ -100,6 +100,9 @@ public class AegeusWallet extends AbstractWallet {
         // with an OP_RETURN data script
         //
         // We need to do this because the AEG client does not accept 'data' in createrawtransaction
+        //
+        // [FIXME #14] Add support for data in createrawtransaction
+        // https://github.com/AegeusCoin/aegeus/issues/14
 
         String addr = lastOut.getAddress();
         BigDecimal amount = lastOut.getAmount();
