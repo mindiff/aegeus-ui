@@ -16,6 +16,11 @@
     <dependencies>
         <dependency>
             <groupId>io.aegeus</groupId>
+            <artifactId>aegeus-jaxrs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.aegeus</groupId>
             <artifactId>aegeus-webui</artifactId>
             <version>${project.version}</version>
         </dependency>

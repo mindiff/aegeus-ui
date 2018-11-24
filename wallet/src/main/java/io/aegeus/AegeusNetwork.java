@@ -15,7 +15,12 @@ public class AegeusNetwork extends AbstractNetwork {
     }
 
     @Override
-    public BigDecimal estimateFee() {
+    public BigDecimal estimateSmartFee(Integer blocks) {
+        return new BigDecimal("0.001");
+    }
+
+    @Override
+    public BigDecimal getMinTxFee() {
         return new BigDecimal("0.001");
     }
 

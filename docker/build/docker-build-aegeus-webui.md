@@ -29,7 +29,7 @@ docker tag aegeus/aegeus-webui aegeus/aegeus-webui:$TAGNAME
 docker push aegeus/aegeus-webui:$TAGNAME
 ```
 
-Run the AEG WebUI
+### Run the WebUI image
 
 ```
 export CNAME=aeg-webui
@@ -38,13 +38,40 @@ export LABEL=Bob
 docker rm -f $CNAME
 docker run --detach \
     -p 8082:8082 \
-    --link aegd:aeg \
+    --link aegd:blockchain \
     --link aeg-ipfs:ipfs \
     --link aeg-jaxrs:jaxrs \
-    --env AEG_WEBUI_LABEL=$LABEL \
+    --env NESSUS_WEBUI_LABEL=$LABEL \
     --memory=100m --memory-swap=2g \
     --name $CNAME \
     aegeus/aegeus-webui
     
-watch docker logs aeg-webui
+docker logs -f aeg-webui
+```
+
+### Run the WebUI in mixed mode
+
+This assumes you have the Blockchain and IPFS instances already running on your host
+
+```
+export CNAME=aeg-webui
+export LOCALIP=192.168.178.20
+export LABEL=Mary
+
+docker rm -f $CNAME
+docker run --detach \
+    -p 8082:8082 \
+    --link aeg-jaxrs:jaxrs \
+    --env IPFS_GATEWAY_ADDR=$LOCALIP \
+    --env IPFS_GATEWAY_PORT=8080 \
+    --env BLOCKCHAIN_JSONRPC_ADDR=$LOCALIP \
+    --env BLOCKCHAIN_JSONRPC_PORT=51473 \
+    --env BLOCKCHAIN_JSONRPC_USER=aeg \
+    --env BLOCKCHAIN_JSONRPC_PASS=aegpass \
+    --env NESSUS_WEBUI_LABEL=$LABEL \
+    --memory=100m --memory-swap=2g \
+    --name $CNAME \
+    aegeus/aegeus-webui
+
+docker logs -f webui
 ```

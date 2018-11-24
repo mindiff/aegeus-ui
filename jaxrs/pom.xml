@@ -18,38 +18,9 @@
             <artifactId>aegeus-wallet</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
-        </dependency>
         <dependency>
             <groupId>io.nessus</groupId>
-            <artifactId>nessus-ipfs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson-provider</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-undertow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>nessus-ipfs-jaxrs</artifactId>
         </dependency>
 
         <!-- Test -->
@@ -71,7 +42,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>io.aegeus.jaxrs.AegeusApplication</mainClass>
+                            <mainClass>io.nessus.ipfs.jaxrs.JAXRSApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

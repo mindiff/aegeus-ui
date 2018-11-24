@@ -20,20 +20,53 @@ CURDIR=`pwd`
 HOMEDIR=`cd $HOMEDIR; pwd`
 cd $CURDIR
 
-export BLOCKCHAIN_CLASS_NAME="io.aegeus.AegeusBlockchain"
+#######################################################
+#
+# IPSF API CONFIG
+#
+if [[ -z "${IPFS_JSONRPC_ADDR}" ]]; then
+    export IPFS_JSONRPC_ADDR="$IPFS_PORT_5001_TCP_ADDR"
+fi
+if [[ -z "${IPFS_JSONRPC_PORT}" ]]; then
+    export IPFS_JSONRPC_PORT="$IPFS_PORT_5001_TCP_PORT"
+fi
 
-export IPFS_API_HOST="$IPFS_PORT_5001_TCP_ADDR"
-export IPFS_API_PORT="$IPFS_PORT_5001_TCP_PORT"
+#######################################################
+#
+# BLOCKCHAIN API CONFIG
+#
+if [[ -z "${BLOCKCHAIN_CLASS_NAME}" ]]; then
+    export BLOCKCHAIN_CLASS_NAME="io.aegeus.AegeusBlockchain"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_ADDR}" ]]; then
+    export BLOCKCHAIN_JSONRPC_ADDR="$BLOCKCHAIN_PORT_51473_TCP_ADDR"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_PORT}" ]]; then
+    export BLOCKCHAIN_JSONRPC_PORT="$BLOCKCHAIN_PORT_51473_TCP_PORT"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_USER}" ]]; then
+    export BLOCKCHAIN_JSONRPC_USER="$BLOCKCHAIN_ENV_RPCUSER"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_PASS}" ]]; then
+    export BLOCKCHAIN_JSONRPC_PASS="$BLOCKCHAIN_ENV_RPCPASS"
+fi
 
-export IPFS_GATEWAY_HOST="$IPFS_PORT_8080_TCP_ADDR"
-export IPFS_GATEWAY_PORT="$IPFS_PORT_8080_TCP_PORT"
+#######################################################
+#
+# JAXRS API CONFIG
+#
+if [[ -z "${NESSUS_JAXRS_ADDR}" ]]; then
+    export NESSUS_JAXRS_ADDR="0.0.0.0"
+fi
+if [[ -z "${NESSUS_JAXRS_PORT}" ]]; then
+    export NESSUS_JAXRS_PORT="8081"
+fi
 
-export AEG_JSONRPC_URL="$AEG_PORT_51473_TCP_ADDR:$AEG_PORT_51473_TCP_PORT"
-export AEG_JSONRPC_USER="$AEG_ENV_RPCUSER"
-export AEG_JSONRPC_PASS="$AEG_ENV_RPCPASS"
-
-export RESTEASY_HOST=0.0.0.0
-export RESTEASY_PORT=8081
+# DEBUG LOG
+#
+#echo "BLOCKCHAIN:   $BLOCKCHAIN_JSONRPC_USER:$BLOCKCHAIN_JSONRPC_PASS@$BLOCKCHAIN_JSONRPC_ADDR:$BLOCKCHAIN_JSONRPC_PORT"
+#echo "IPFS_JSONRPC: $IPFS_JSONRPC_ADDR:$IPFS_JSONRPC_PORT"
+#echo "NESSUS_JAXRS: $NESSUS_JAXRS_ADDR:$NESSUS_JAXRS_PORT"
 
 JAVA_OPTS="-Xmx200m"
 

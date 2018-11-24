@@ -57,11 +57,12 @@ public class AegeusWalletTest extends AbstractAegeusTest {
         BigDecimal dataFee = network.getMinDataAmount();
         BigDecimal spendAmount = dataAmount.add(dataFee);
 
-        List<UTXO> utxos = wallet.selectUnspent(LABEL_BOB, addFee(spendAmount));
+        List<UTXO> utxos = wallet.selectUnspent(LABEL_BOB, spendAmount);
         BigDecimal utxosAmount = getUTXOAmount(utxos);
 
         Address changeAddr = wallet.getChangeAddress(LABEL_BOB);
-        BigDecimal changeAmount = utxosAmount.subtract(addFee(spendAmount));
+        BigDecimal changeAmount = utxosAmount.subtract(spendAmount);
+        changeAmount = changeAmount.subtract(network.getMinTxFee());
 
         byte[] dataIn = "IPFS".getBytes();
 

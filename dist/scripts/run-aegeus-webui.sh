@@ -20,17 +20,68 @@ CURDIR=`pwd`
 HOMEDIR=`cd $HOMEDIR; pwd`
 cd $CURDIR
 
-export BLOCKCHAIN_CLASS_NAME="io.aegeus.AegeusBlockchain"
+#######################################################
+#
+# IPSF GATEWAY CONFIG
+#
+if [[ -z "${IPFS_GATEWAY_ADDR}" ]]; then
+    export IPFS_GATEWAY_ADDR="$IPFS_ENV_GATEWAYIP"
+fi
+if [[ -z "${IPFS_GATEWAY_PORT}" ]]; then
+    export IPFS_GATEWAY_PORT="$IPFS_PORT_8080_TCP_PORT"
+fi
 
-export IPFS_GATEWAY_HOST="$IPFS_ENV_GATEWAYIP"
-export IPFS_GATEWAY_PORT="$IPFS_PORT_8080_TCP_PORT"
+#######################################################
+#
+# JAXRS API CONFIG
+#
+if [[ -z "${NESSUS_JAXRS_ADDR}" ]]; then
+    export NESSUS_JAXRS_ADDR="$JAXRS_PORT_8081_TCP_ADDR"
+fi
+if [[ -z "${NESSUS_JAXRS_PORT}" ]]; then
+    export NESSUS_JAXRS_PORT="$JAXRS_PORT_8081_TCP_PORT"
+fi
 
-export AEG_JAXRS_HOST="$JAXRS_PORT_8081_TCP_ADDR"
-export AEG_JAXRS_PORT="$JAXRS_PORT_8081_TCP_PORT"
+#######################################################
+#
+# BLOCKCHAIN API CONFIG
+#
+if [[ -z "${BLOCKCHAIN_CLASS_NAME}" ]]; then
+    export BLOCKCHAIN_CLASS_NAME="io.aegeus.AegeusBlockchain"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_ADDR}" ]]; then
+    export BLOCKCHAIN_JSONRPC_ADDR="$BLOCKCHAIN_PORT_51473_TCP_ADDR"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_PORT}" ]]; then
+    export BLOCKCHAIN_JSONRPC_PORT="$BLOCKCHAIN_PORT_51473_TCP_PORT"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_USER}" ]]; then
+    export BLOCKCHAIN_JSONRPC_USER="$BLOCKCHAIN_ENV_RPCUSER"
+fi
+if [[ -z "${BLOCKCHAIN_JSONRPC_PASS}" ]]; then
+    export BLOCKCHAIN_JSONRPC_PASS="$BLOCKCHAIN_ENV_RPCPASS"
+fi
 
-export AEG_JSONRPC_URL="$AEG_PORT_51473_TCP_ADDR:$AEG_PORT_51473_TCP_PORT"
-export AEG_JSONRPC_USER="$AEG_ENV_RPCUSER"
-export AEG_JSONRPC_PASS="$AEG_ENV_RPCPASS"
+#######################################################
+#
+# JAXRS API CONFIG
+#
+if [[ -z "${NESSUS_WEBUI_ADDR}" ]]; then
+    export NESSUS_WEBUI_ADDR="0.0.0.0"
+fi
+if [[ -z "${NESSUS_WEBUI_PORT}" ]]; then
+    export NESSUS_WEBUI_PORT="8082"
+fi
+if [[ -z "${NESSUS_WEBUI_LABEL}" ]]; then
+    export NESSUS_WEBUI_LABEL="Bob"
+fi
+
+# DEBUG LOG
+#
+#echo "BLOCKCHAIN:   $BLOCKCHAIN_JSONRPC_USER:$BLOCKCHAIN_JSONRPC_PASS@$BLOCKCHAIN_JSONRPC_ADDR:$BLOCKCHAIN_JSONRPC_PORT"
+#echo "IPFS_GATEWAY: $IPFS_GATEWAY_ADDR:$IPFS_GATEWAY_PORT"
+#echo "NESSUS_JAXRS: $NESSUS_JAXRS_ADDR:$NESSUS_JAXRS_PORT"
+#echo "NESSUS_WEBUI: $NESSUS_WEBUI_ADDR:$NESSUS_WEBUI_PORT"
 
 JAVA_OPTS="-Xmx200m"
 

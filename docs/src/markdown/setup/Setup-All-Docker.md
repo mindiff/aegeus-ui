@@ -22,8 +22,8 @@ Here is the quickstart to get the whole system running in no time ...
 
     docker run --detach --name aegd -p 29328:29328 --memory=300m --memory-swap=2g aegeus/aegeusd
     docker run --detach --name aeg-ipfs -p 4001:4001 -p 8080:8080 -e GATEWAYIP=$GATEWAYIP --memory=300m --memory-swap=2g aegeus/aegeus-ipfs
-    docker run --detach --name aeg-jaxrs --expose 8081 --link aegd:aeg --link aeg-ipfs:ipfs --memory=100m --memory-swap=2g aegeus/aegeus-jaxrs
-    docker run --detach --name aeg-webui -p 8082:8082 --link aegd:aeg --link aeg-ipfs:ipfs --link aeg-jaxrs:jaxrs --memory=100m --memory-swap=2g --env AEG_WEBUI_LABEL=Bob aegeus/aegeus-webui
+    docker run --detach --name aeg-jaxrs --link aegd:blockchain --link aeg-ipfs:ipfs --memory=100m --memory-swap=2g aegeus/aegeus-jaxrs
+    docker run --detach --name aeg-webui -p 8082:8082 --link aegd:blockchain --link aeg-ipfs:ipfs --link aeg-jaxrs:jaxrs --memory=100m --memory-swap=2g --env NESSUS_WEBUI_LABEL=Bob aegeus/aegeus-webui
 
 Now that everything is running, it should look similar to this
 
@@ -101,8 +101,7 @@ This is the Aegeus JSON-RPC bridge, which contains the Aegeus application logic 
 To start the Aegeus bridge in Docker, you can run ...
 
     docker run --detach \
-        -- expose 8081 \
-        --link aegd:aeg \
+        --link aegd:blockchain \
         --link aeg-ipfs:ipfs \
         --memory=100m --memory-swap=2g \
         --name aeg-jaxrs \
@@ -127,10 +126,10 @@ To start up the Aegeus UI in Docker, you can run ...
 
     docker run --detach \
         -p 8082:8082 \
-        --link aegd:aeg \
+        --link aegd:blockchain \
         --link ipfs:ipfs \
         --link jaxrs:jaxrs \
-        --env AEG_WEBUI_LABEL=$LABEL \
+        --env NESSUS_WEBUI_LABEL=$LABEL \
         --memory=100m --memory-swap=2g \
         --name aeg-webui \
         aegeus/aegeus-webui
@@ -234,7 +233,7 @@ The local unencrypted content is also available after the IPFS add.
 
 Lets delete that local file.
 
-    curl http://172.17.0.4:8081/aegeus/dellocal?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX\&path=test.txt
+    curl http://172.17.0.4:8081/aegeus/rmlocal?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX\&path=test.txt
     curl http://172.17.0.4:8081/aegeus/findlocal?addr=AJG36ywiYJnxJLdRDw8nzHUqKbAujmjvpX
 
     []

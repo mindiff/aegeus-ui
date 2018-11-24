@@ -18,27 +18,27 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.aegeus.AbstractAegeusTest;
-import io.aegeus.jaxrs.AegeusApplication;
-import io.aegeus.jaxrs.AegeusApplication.AegeusServer;
-import io.aegeus.jaxrs.AegeusClient;
-import io.aegeus.jaxrs.SFHandle;
 import io.nessus.Wallet.Address;
+import io.nessus.ipfs.jaxrs.JAXRSApplication;
+import io.nessus.ipfs.jaxrs.JAXRSApplication.JAXRSServer;
+import io.nessus.ipfs.jaxrs.JAXRSClient;
+import io.nessus.ipfs.jaxrs.SFHandle;
 
-public class AegeusFrontendTest extends AbstractAegeusTest {
+public class AegeusFrontendTest extends AbstractJAXRSTest {
 
-    static AegeusServer server;
-    static AegeusClient client;
+    static JAXRSServer server;
+    static JAXRSClient client;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
 
         AbstractAegeusTest.beforeClass();
 
-        server = AegeusApplication.serverStart();
+        server = JAXRSApplication.serverStart();
 
-        int port = server.getAegeusConfig().getPort();
-        String host = server.getAegeusConfig().getHost();
-        client = new AegeusClient(new URI(String.format("http://%s:%d/aegeus", host, port)));
+        int port = server.getJAXRSConfig().getPort();
+        String host = server.getJAXRSConfig().getHost();
+        client = new JAXRSClient(new URI(String.format("http://%s:%d/nessus", host, port)));
     }
 
     @AfterClass
@@ -79,22 +79,22 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
 
         // Register Bob's public encryption key
 
-        String encKey = client.register(addrBob.getAddress());
+        String encKey = client.registerAddress(addrBob.getAddress());
         Assert.assertNotNull(encKey);
 
         // Find Bob's pubKey registration
 
-        String wasKey = client.findRegistation(addrBob.getAddress());
+        String wasKey = client.findAddressRegistation(addrBob.getAddress());
         Assert.assertEquals(encKey, wasKey);
 
         // Register Mary's public encryption key
 
-        encKey = client.register(addrMary.getAddress());
+        encKey = client.registerAddress(addrMary.getAddress());
         Assert.assertNotNull(encKey);
 
         // Find Mary's pubKey registration
 
-        wasKey = client.findRegistation(addrMary.getAddress());
+        wasKey = client.findAddressRegistation(addrMary.getAddress());
         Assert.assertEquals(encKey, wasKey);
 
         // Add content to IPFS
@@ -123,7 +123,7 @@ public class AegeusFrontendTest extends AbstractAegeusTest {
         BufferedReader br = new BufferedReader(new InputStreamReader(reader));
         Assert.assertEquals("The quick brown fox jumps over the lazy dog.", br.readLine());
 
-        Assert.assertTrue(client.deleteLocalContent(addrBob.getAddress(), relPath.toString()));
+        Assert.assertTrue(client.removeLocalContent(addrBob.getAddress(), relPath.toString()));
         Assert.assertTrue(client.findLocalContent(addrBob.getAddress()).isEmpty());
 
         // Find IPFS content on blockchain
