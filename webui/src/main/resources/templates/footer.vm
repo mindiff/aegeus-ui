@@ -10,7 +10,7 @@
 <!-- Footer -->
 <footer class="footer">
     <div class="text-center col-sm-12 pt-4">
-	<span><b>Wallet version</b>: $walletVersion <b>Protocol version</b>: $protocolVersion</span>
+	<span><b>Wallet version</b>: $walletVersion <b>Protocol version</b>: $protocolVersion <b>Blocks</b>: $blockCount</span>
 	<br>
         <span>Copyright &copy; 2018 Aegeus</span>
     </div>
