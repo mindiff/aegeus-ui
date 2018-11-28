@@ -102,6 +102,7 @@ class AegeusContentHandler implements HttpHandler {
         long protocolVersion = network.getNetworkInfo().protocolVersion();
         context.put("walletVersion", walletVersion);
         context.put("protocolVersion", protocolVersion);
+        context.put("blockCount", network.getBlockCount());
 
         // Action add text
 
