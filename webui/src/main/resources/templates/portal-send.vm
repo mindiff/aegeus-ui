@@ -15,6 +15,10 @@
                     <tr>
                         <th>Address</th>
                         <td>
+			    #if ($toaddrs.size() == 1)
+                                <input type=hidden name="toaddr" value="$toaddrs[0].address">
+                                &nbsp;&nbsp;&nbsp;$toaddrs[0].label - $toaddrs[0].address
+			    #else
                             <select name="toaddr">
                                 #foreach( $toaddr in $toaddrs )
                                     #if ( $toaddr.watchOnly )
@@ -22,6 +26,7 @@
                                     #end
                                 #end
                             </select>
+			    #end
                             <button type="submit" class="btn btn-outline-primary btn-sm">send</button>
                         </td>
                     </tr>
