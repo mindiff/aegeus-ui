@@ -249,7 +249,7 @@ class AegeusContentHandler implements HttpHandler {
 
         client.add(rawAddr, relPath, new ByteArrayInputStream(content.getBytes()));
 
-        redirectFileList(exchange, rawAddr);
+	new RedirectHandler("/portal/files?addr=" + rawAddr + "#pills-contact").handleRequest(exchange);
     }
 
     private void actAddURL(HttpServerExchange exchange, VelocityContext context) throws Exception {
@@ -290,7 +290,7 @@ class AegeusContentHandler implements HttpHandler {
             	        new RedirectHandler("/portal/files?addr=" + rawAddr + "&error=Remote file size exceeds maximum of 1MB (" + url + ")#pills-url").handleRequest(exchange);
  		    } else {
         		client.add(rawAddr, relPath, furl.openStream());
-        		redirectFileList(exchange, rawAddr);
+			new RedirectHandler("/portal/files?addr=" + rawAddr + "#pills-url").handleRequest(exchange);
 		    }
 	        }
 	    }
