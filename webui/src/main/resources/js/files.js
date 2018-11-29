@@ -22,7 +22,7 @@
         return vars;
     }
 
-    $(document).on('click', '#show-select-address', function(e) {
+    $('.show-select-address').on('click', function(e) {
         e.preventDefault();
         $('#exampleModal').modal('toggle');
     });

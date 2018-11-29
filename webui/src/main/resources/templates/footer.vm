@@ -33,14 +33,20 @@
             </div>
             <div class="modal-body">
                 <ul id="address-list">
-                    #if ( ! $addrs.empty )
+                    #if ( ! $addrs.empty && $addrs.size() > 1)
                         #foreach( $addr in $addrs )
                             #if ( $addr.label != "" && ! $addr.watchOnly )
                                 <li>( $addr.label ) <a href="/portal/files?addr=$addr.address">$addr.address</a>
                             #end
                         #end
-                    #end
                 </ul>
+		    #elseif ($addrs.size() == 1 && $addrs[0].label != "" && ! $addrs[0].watchOnly)
+			<input type=hidden name="file_link" value="/portal/files?addr=$addrs[0].address">
+		        <input type=hidden name="nomodal" value="true">
+		    #else
+		        <input type=hidden name="nomodal" value="true">
+		        <input type=hidden name="nomodal_message" value="Assign, fund and register an address first to add content">
+                    #end
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -62,7 +68,18 @@ $customJS
     (function($) {
         $(document).on('click', '.show-select-address', function(e) {
             e.preventDefault();
-            $('#addressModal').modal('toggle');
+	    var no_modal = $("input[name=nomodal").val();
+	    var file_link = $("input[name=file_link").val();
+	    var nomodal_message = $("input[name=nomodal_message").val();
+	    var files_url = "/portal/addresses";
+
+	    if (no_modal === "true" && file_link) {
+	      window.location.href = file_link
+	    } else if (no_modal === "true" && nomodal_message) {
+	      $("#warning_messages").html(nomodal_message + " - <a href='/portal/addresses'>Click Here</a>");
+	    } else {
+              $('#addressModal').modal('toggle');
+	    }
         });
     })(jQuery);
 </script>

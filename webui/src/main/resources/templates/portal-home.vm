@@ -38,5 +38,7 @@
         </div>
     </div>
 
+<div id="warning_messages"></div>
+
 #set( $customJS = '' )
 #parse( "templates/footer.vm" )
