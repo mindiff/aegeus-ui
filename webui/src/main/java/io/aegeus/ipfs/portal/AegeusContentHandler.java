@@ -385,7 +385,7 @@ class AegeusContentHandler implements HttpHandler {
             new RedirectHandler("/portal/files?addr=" + rawFromAddr + "&error=" + e.getMessage() + "!").handleRequest(exchange);
         }
 
-        redirectHomePage(exchange);
+	new RedirectHandler("/portal/files?addr=" + rawFromAddr + "#pills-profile").handleRequest(exchange);
     }
 
     private ByteBuffer actFileShow(HttpServerExchange exchange, VelocityContext context) throws Exception {
