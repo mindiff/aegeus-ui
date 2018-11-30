@@ -2,6 +2,18 @@
 #set( $navTitle = 'File List' )
 #set( $crumb = 'Files' )
 #parse( "templates/header.vm" )
+
+    #if ( $addr.getBalance() == 0 )
+        #set( $send_button_status = 'disabled' )
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">Balance too low($addr.getBalance()) - Sending disabled
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+        </div>
+    #else
+        #set( $send_button_status = '' )
+    #end
+
     <div class="address-label">Address: <span class="address"></span></div>
 
     <!-- MAIN Content -->
@@ -74,7 +86,7 @@
                                 <td><a href="$gatewayUrl/$file.cid" target="_blank">$file.cid</a></td>
                                 <td>
                                     <!-- <button type="button" class="btn btn-outline-primary btn-sm mr-1" onclick="document.getElementById('form-$file.cid').submit()">get</a> -->
-                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/portal/psend?addr=$addr.address&path=$file.path&cid=$file.cid';">send</a>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/portal/psend?addr=$addr.address&path=$file.path&cid=$file.cid';" $send_button_status>send</a>
                                 </td>
                             </form>
                         </tr>
