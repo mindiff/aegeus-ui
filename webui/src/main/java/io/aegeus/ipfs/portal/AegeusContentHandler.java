@@ -205,6 +205,11 @@ class AegeusContentHandler implements HttpHandler {
             tmplPath = pageGetBalance(exchange, context);
         }
 
+	// Help section
+        else if ( relPath.startsWith("/portal/help") ) {
+            tmplPath = pageHelp();
+        }
+
         // Home page
 
         else {
@@ -548,6 +553,11 @@ class AegeusContentHandler implements HttpHandler {
 
         return "templates/portal-addresses.vm";
     }
+
+    private String pageHelp() throws Exception {
+        return "templates/help.vm";
+    }
+
 
     private String pageHome(VelocityContext context) throws Exception {
 

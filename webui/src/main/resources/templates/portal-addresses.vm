@@ -12,9 +12,6 @@
                 <li class="nav-item mr-1">
                     <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Address Book</a>
                 </li>
-                <li class="nav-item mr-1">
-                    <a class="nav-link" id="pills-help-tab" data-toggle="pill" href="#pills-help" role="tab" aria-controls="pills-help" aria-selected="false">Help <i class="far fa-question-circle"></i></a>
-                </li>
             </ul>
 
             <div class="tab-content" id="pills-tabContent">
@@ -125,55 +122,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- HELP TAB -->
-                <div class="tab-pane fade" id="pills-help" role="tabpanel" aria-labelledby="pills-help-tab">
-                    <div class="row">
-                        <div class="col-sm-10 offset-1">
-                            <p>The first steps for both of you to take to share anything with another member on the Aegeus platform is:</p>
-                            <ol>
-                                <li>Click "Generate New Address" to generate a new address to use for your share and give it a name for your own reference.</li>
-                                <li>Send it some AEG (a small amount will do, even a few AEG).</li>
-                                <li>Click "assign" and then "register".</li>
-                                <li>Share the new AEG address with the Aegeus member you intend to securely share with.</li>
-                            </ol>
-
-                            <p>Next what you will both do is:</p>
-                            <ol>
-                                <li>Click "Addresses" on the menu to the left.</li>
-                                <li>Paste the address you gave them into the input box labeled "Key To Import", give it a Label, and click "Import Key".</li>
-                            </ol>
-
-                            <p>Next what you will do:</p>
-                            <ol>
-                                <li>Click "Files" on the menu to your left.</li>
-                                <li>Click the address you've just created to access the file management area.</li>
-                                <li>If you want to share a text file by URL, click "Add by URL".  If you want to add content yourself manually, click "Create Document".</li>
-                            </ol>
-
-                            <p>If adding manually through "Create Document", take the following steps:</p>
-                            <ol>
-                                <li>Set the "Content Path" or the name you would like to give this content.</li>
-                                <li>Type your content in the box and click "Add Content".</li>
-                                <li>Click "IPFS Files" and find the name of the data you just added and click "send".</li>
-                                <li>Choose the person you wish to send to from the drop down box and click "send".</li>
-                            </ol>
-
-                            <hr>
-
-                            <p>Now to get the files that were sent to you, take the following steps:</p>
-                            <ol>
-                                <li>Click "Files" on the menu, and then choose the address from the list you'd like to view files for.</li>
-                                <li>Click "IPFS Files".</li>
-                                <li>Click "get".</li>
-                                <li>Click "Local Files".</li>
-                                <li>Click "show" next to the file you wish to view.</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-                <!-- END HELP TAB -->
-
             </div>
         </div>
     </div>
