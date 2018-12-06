@@ -4,7 +4,7 @@
 rm -rf docker
 mkdir -p docker
 
-export NVERSION=1.0.0.Alpha5-SNAPSHOT
+export NVERSION=1.0.0.Beta1-SNAPSHOT
 
 tar xzf aegeus-dist-$NVERSION-deps.tgz -C docker
 tar xzf aegeus-dist-$NVERSION-proj.tgz -C docker
@@ -24,7 +24,7 @@ EOF
 docker build -t aegeus/aegeus-webui docker/
 docker push aegeus/aegeus-webui
 
-export TAGNAME=1.0.0.Alpha5-dev
+export TAGNAME=1.0.0.Beta1
 docker tag aegeus/aegeus-webui aegeus/aegeus-webui:$TAGNAME
 docker push aegeus/aegeus-webui:$TAGNAME
 ```
