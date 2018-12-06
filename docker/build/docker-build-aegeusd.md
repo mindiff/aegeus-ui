@@ -24,6 +24,7 @@ rpcuser=$RPCUSER
 rpcpassword=$RPCPASS
 rpcport=$RPCPORT
 rpcallowip=172.17.0.1/24
+printtoconsole=1
 listen=1
 server=1
 EOF
