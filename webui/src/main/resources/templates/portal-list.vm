@@ -103,7 +103,7 @@
                 <img id="add-content-loading" src="/img/black-ajax-loader.gif" alt="Adding content..." class="mx-auto d-none" />
                 <form action="/portal/addtxt">
                     <div class="form-group">
-                        <input name="path" type="text" class="form-control" id="content-path" aria-describedby="contentHelp" placeholder="Filename">
+                        <input name="path" type="text" class="form-control" id="content-path" aria-describedby="contentHelp" placeholder="Example/SecretFile">
                     </div>
                     <div class="form-group">
                         <textarea name="content" class="form-control" id="content-content" rows="3" aria-describedby="contentContentHelp" placeholder="Add your content here"></textarea>
@@ -111,13 +111,15 @@
                     <button type="submit" class="btn btn-primary">Add Content</button>
                     <input name="addr" type="hidden" value="$addr.address">
                 </form>
+<br>
+Our system is designed uniquely to ensure constant availability with your data's privacy in-tact at all times. No private corporations or governments can access this data without you taking specific action to grant them access. All data once added into this system is encrypted with a strong encryption key and stored on distributed network storage. When you wish to share content with another party, your data is encrypted again such that the other party and only the other party can access that data and view the unencrypted contents.
             </div>
 
             <div class="tab-pane fade" id="pills-url" role="tabpanel" aria-labelledby="pills-url-tab">
                 <h3>Add Content By URL</h3>
                 <form action="/portal/addurl" id="add-content-url">
                     <div class="form-group">
-                        <input name="path" type="text" class="form-control" id="content-path" aria-describedby="contentHelpPath" placeholder="Path">
+                        <input name="path" type="text" class="form-control" id="content-path" aria-describedby="contentHelpPath" placeholder="Example/SecretFile">
                         <small id="contentHelpPath" class="form-text text-muted">Give this content a filename/label for your reference.</small>
                     </div>
                     <div class="form-group">
@@ -127,6 +129,8 @@
                     <button type="submit" class="btn btn-primary">Add Content</button>
                     <input name="addr" type="hidden" value="$addr.address">
                 </form>
+<br>
+Our system is designed uniquely to ensure constant availability with your data's privacy in-tact at all times. No private corporations or governments can access this data without you taking specific action to grant them access. All data once added into this system is encrypted with a strong encryption key and stored on distributed network storage. When you wish to share content with another party, your data is encrypted again such that the other party and only the other party can access that data and view the unencrypted contents.
             </div>
         #end
     </div>
