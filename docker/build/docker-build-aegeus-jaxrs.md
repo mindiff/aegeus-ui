@@ -4,7 +4,7 @@
 rm -rf docker
 mkdir -p docker
 
-export NVERSION=1.0.0.Beta1-SNAPSHOT
+export NVERSION=1.0.0.Beta1
 
 tar xzf aegeus-dist-$NVERSION-deps.tgz -C docker
 tar xzf aegeus-dist-$NVERSION-proj.tgz -C docker
