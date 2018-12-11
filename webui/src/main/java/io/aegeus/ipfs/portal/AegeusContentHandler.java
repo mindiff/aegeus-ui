@@ -336,7 +336,7 @@ class AegeusContentHandler implements HttpHandler {
 
         client.removeLocalContent(rawAddr, relPath);
 
-        redirectFileList(exchange, rawAddr);
+	new RedirectHandler("/portal/files?addr=" + rawAddr + "#pills-home").handleRequest(exchange);
     }
 
     private void actFileGet(HttpServerExchange exchange, VelocityContext context) throws Exception {
