@@ -346,7 +346,20 @@ class AegeusContentHandler implements HttpHandler {
         String rawAddr = qparams.get("addr").getFirst();
         String cid = qparams.get("cid").getFirst();
 
-        client.get(rawAddr, cid, relPath, 10000L);
+
+        try {
+            client.get(rawAddr, cid, relPath, 10000L);
+        } catch (IllegalStateException e) {
+            String sContentExists = "Local content already exists";
+            Pattern pContentExists = Pattern.compile(sContentExists);
+            String errContentExists = "Local content already exists with that path for (" + cid + ").  Please type in a new path to save it again.";
+
+            Matcher mContentExists = pContentExists.matcher(e.getMessage());
+            if (mContentExists.find()) {
+                new RedirectHandler("/portal/files?addr=" + rawAddr + "&error=" + errContentExists + "#pills-profile").handleRequest(exchange);
+	    }
+        }
+
 
         redirectFileList(exchange, rawAddr);
     }

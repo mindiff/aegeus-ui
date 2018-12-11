@@ -85,7 +85,7 @@
                                 <td><input type="text" name="path" value="$file.path"></td>
                                 <td><a href="$gatewayUrl/$file.cid" target="_blank">$file.cid</a></td>
                                 <td>
-                                    <!-- <button type="button" class="btn btn-outline-primary btn-sm mr-1" onclick="document.getElementById('form-$file.cid').submit()">get</a> -->
+                                    <button type="button" class="btn btn-outline-primary btn-sm mr-1" onclick="document.getElementById('form-$file.cid').submit()">get</a>
                                     <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.location.href='/portal/psend?addr=$addr.address&path=$file.path&cid=$file.cid';" $send_button_status>send</a>
                                 </td>
                             </form>
