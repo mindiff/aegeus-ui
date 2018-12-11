@@ -22,6 +22,8 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -382,7 +384,16 @@ class AegeusContentHandler implements HttpHandler {
         try {
             client.send(rawFromAddr, cid, rawToAddr, 10000L);
         } catch(IllegalArgumentException e) {
-            new RedirectHandler("/portal/files?addr=" + rawFromAddr + "&error=" + e.getMessage() + "!").handleRequest(exchange);
+	    String sBadKey = "Cannot obtain encryption key";
+	    Pattern pBadKey = Pattern.compile(sBadKey);
+	    String errBadKey = "The person you are trying to send to has not registered their key.  Please ask them to do so in their addresses menu.";
+
+	    Matcher mBadKey = pBadKey.matcher(e.getMessage());
+	    if (mBadKey.find()) {
+                new RedirectHandler("/portal/files?addr=" + rawFromAddr + "&error=" + errBadKey).handleRequest(exchange);
+	    } else {
+                new RedirectHandler("/portal/files?addr=" + rawFromAddr + "&error=" + e.getMessage() + "!").handleRequest(exchange);
+	    }
         }
 
 	new RedirectHandler("/portal/files?addr=" + rawFromAddr + "#pills-profile").handleRequest(exchange);
