@@ -360,8 +360,8 @@ class AegeusContentHandler implements HttpHandler {
 	    }
         }
 
+        new RedirectHandler("/portal/files?addr=" + rawAddr + "#pills-profile").handleRequest(exchange);
 
-        redirectFileList(exchange, rawAddr);
     }
 
     private void actImportKey(HttpServerExchange exchange, VelocityContext context) throws Exception {
