@@ -97,9 +97,13 @@ public class AegeusFrontendTest extends AbstractJAXRSTest {
         wasKey = client.findAddressRegistation(addrMary.getAddress());
         Assert.assertEquals(encKey, wasKey);
 
-        // Add content to IPFS
+        // Remove local content for Bob
 
         Path relPath = Paths.get("bob/userfile.txt");
+        client.removeLocalContent(addrBob.getAddress(), relPath.toString());
+
+        // Add content to IPFS
+
         InputStream input = getClass().getResourceAsStream("/userfile.txt");
 
         SFHandle fhandle = client.add(addrBob.getAddress(), relPath.toString(), input);
@@ -168,9 +172,13 @@ public class AegeusFrontendTest extends AbstractJAXRSTest {
         Assert.assertTrue(fhandle.isEncrypted());
         Assert.assertNotNull(fhandle.getTxId());
 
-        // Get content from IPFS
+        // Remove local content for Bob
 
         relPath = Paths.get("marry/userfile.txt");
+        client.removeLocalContent(addrMary.getAddress(), relPath.toString());
+
+        // Get content from IPFS
+
         fhandle = client.get(addrMary.getAddress(), fhandle.getCid(), relPath.toString(), timeout);
 
         Assert.assertEquals(addrMary, wallet.findAddress(fhandle.getOwner()));
