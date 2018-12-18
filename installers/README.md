@@ -77,5 +77,5 @@ As you can see, the rest of the world only sees encrypted bits.  Only you, and t
 
 ![](images/step7-result2.jpg?raw=true)
 
-One of the more exciting additions to the next release is the ability to add full directories and binary content.  We will also be working in the meantime on building out our in-wallet system and storage network with monetization options for being a storage provide (AEG Storage Node) or a storage client (Renting storage from those within the network).  We hope you've enjoyed this beta release and if there are any questions you can join us on Discord https://discord.gg/pwn4pBA
+One of the more exciting additions to the next release is the ability to add full directories and binary content.  We will also be working in the meantime on building out our in-wallet system and storage network with monetization options for being a storage provider (AEG Storage Node) or a storage client (Renting storage from those within the network).  We hope you've enjoyed this beta release and if there are any questions you can join us on Discord https://discord.gg/pwn4pBA
 
