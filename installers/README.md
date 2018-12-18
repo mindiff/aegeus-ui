@@ -48,7 +48,7 @@ Now you will see your new address has been registered and a small amount of AEG 
 
 ![](images/step3.jpg?raw=true)
 
-4. Another person using this system that you'd like to share a file with at this point should share their registered address with you.  Once they have, click the ``Addresses` menu and then ``Address Book``.  Give the address you're adding to your book a label that you'll be familiar with and paste their registered AEG address into the input box to the right and click ``Import Key`` This can take some time, as it is scanning the blockchain for this user's key information.  This is a method that is going to be vastly improved upon in the upcoming release.
+4. Another person using this system that you'd like to share a file with at this point should share their registered address with you.  Once they have, click the ``Addresses`` menu and then ``Address Book``.  Give the address you're adding to your book a label that you'll be familiar with and paste their registered AEG address into the input box to the right and click ``Import Key`` This can take some time, as it is scanning the blockchain for this user's key information.  This is a method that is going to be vastly improved upon in the upcoming release.
 
 ![](images/step4.jpg?raw=true)
 
